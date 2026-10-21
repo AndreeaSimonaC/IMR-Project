@@ -6,7 +6,7 @@
 
 # About the Project  
 Pixel Path 3D is a VR application that allows users to create and animate 3D models using hand gestures.  
-The application includes two main module:  
+The application includes two main modules:  
   - **Modeling:** Create and edit 3D models using basic geometric shapes, tools, colors and hand-based object manipulation.  
   - **Animation:** Animate the 3D model using different layers for different parts of the object, keyframes and a simple timeline.  
 
