@@ -13,3 +13,12 @@ The application includes two main modules:
 # Project Documentation  
 
 [View Pixel Path 3D Google Document](https://docs.google.com/document/d/1A2okfnWc2Dq9sr-CjnDbPX52-YoWj7oJlRQS3c47iVg/edit?usp=sharing)
+
+# Week 1 - Unity XR Setup
+Progress:
+- Created the Unity 6.3 LTS project
+- Configured Android and OpenXR for Meta Quest 2
+- Installed XR Hands, XR Interaction Toolkit
+- Enabled hand tracking and Meta Quest Support
+- Imported and tested the Hands Interaction Demo
+- Tested grabbing and moving 3D objects using simulated hands.
