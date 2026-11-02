@@ -13,6 +13,7 @@ The application includes two main modules:
 # Project Documentation  
 
 [View Pixel Path 3D Google Document](https://docs.google.com/document/d/1A2okfnWc2Dq9sr-CjnDbPX52-YoWj7oJlRQS3c47iVg/edit?usp=sharing)
+The homework assignments are in separate tabs, as well as a Prompts tab with the main help AI provided, along with the link to the full AI conversation.
 
 # Week 1 - Unity XR Setup
 Progress:
@@ -22,3 +23,12 @@ Progress:
 - Enabled hand tracking and Meta Quest Support
 - Imported and tested the Hands Interaction Demo
 - Tested grabbing and moving 3D objects using simulated hands.
+
+# Week 2 - VR Studio Grayboxing
+Progress:
+- Created the VR studio graybox environment in Blender
+- Modeled and imported the central platform and basic decorations
+- Created prefabs for studio assets
+- Added basic lighting
+- Separate graybox scenes for Modeling and Animation workspaces
+- Placeholders for panels
