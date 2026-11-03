@@ -1,3 +1,4 @@
+
 # Unity generated folders
 **/[Ll]ibrary/
 **/[Tt]emp/
@@ -7,19 +8,44 @@
 **/[Ll]ogs/
 **/[Uu]serSettings/
 **/[Mm]emoryCaptures/
+**/[Rr]ecordings/
 
 # IDE files
 .vs/
 .idea/
+.gradle/
 *.csproj
+*.unityproj
 *.sln
 *.suo
 *.user
+*.userprefs
+*.tmp
+*.pdb
+*.mdb
 
 # Blender backup files
 *.blend1
 *.blend2
 
+# Unity builds and packages
+*.apk
+*.aab
+*.unitypackage
+
 # Windows
 Thumbs.db
 Desktop.ini
+
+# Crash reports
+sysinfo.txt
+
+
+# Unity Android build temporary files
+**/.utmp/
+**/*_BackUpThisFolder_ButDontShipItWithYourGame/
+**/*_BurstDebugInformation_DoNotShip/
+
+# Android builds
+*.apk
+*.aab
