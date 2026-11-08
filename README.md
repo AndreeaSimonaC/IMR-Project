@@ -32,3 +32,16 @@ Progress:
 - Added basic lighting
 - Separate graybox scenes for Modeling and Animation workspaces
 - Placeholders for panels
+
+# Week 3 - VR Interaction and Modeling UI
+Progress:
+- Updated XR Interaction Toolkit and XR Hands samples
+- Created custom fingerless gloves in Blender and imported them into Unity
+- Integrated both gloves with the XR hand skeletons
+- Tested hand tracking, Pinch, and Grab interactions
+- Implemented project settings for the voxel modeling workspace
+- Created the voxel grid and adjusted the central platform to fit its dimensions
+- Designed and positioned interactive menu buttons on the hands
+- Created prefabs for the Model, Edit, and Color hand menus
+- Added icons and TextMeshPro labels to the buttons
+- Organized the hand menu hierarchy for future tool functionality
