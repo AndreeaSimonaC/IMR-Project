@@ -11,8 +11,12 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/_ProjectAssets/Scenes/VRStudio_Walkin.unity
     guid: 2e9ac741a3a2e5d4585cbc33abd3e4c3
+  - enabled: 1
+    path: Assets/_ProjectAssets/Scenes/Modeling_Main.unity
+    guid: db6e97ef8ae39624683b575fc8da5977
   m_configObjects:
     UnityEditor.XR.ARCore.ARCoreSettings: {fileID: 11400000, guid: d18ba3ff71b985b43ad8c0e32c0c4b8d, type: 2}
+    com.unity.dt.app-ui: {fileID: 11400000, guid: 1b1c20d82303e4b5781c3ef50ac1449f, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
     com.unity.xr.arfoundation.simulation_settings: {fileID: 11400000, guid: 272168b36f684f44185c72627eaf352d, type: 2}
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: cea696f892512d040993c5c373a6fc8c, type: 2}
