@@ -34,7 +34,7 @@ Progress:
 - Placeholders for panels
 
 # Week 3 - VR Interaction and Modeling UI
-[Week 3 Progress Video](https://drive.google.com/file/d/13XdH8XlWydvP7a4ZEHIz7wITHJ4AWzEr/view?usp=sharing) 
+[Week 3 Progress Video](https://drive.google.com/file/d/1OEKU9wQCgUB6bQ6NzdTVISoHyJ52vTJW/view?usp=sharing) 
 
 Progress:
 - Updated XR Interaction Toolkit and XR Hands samples
