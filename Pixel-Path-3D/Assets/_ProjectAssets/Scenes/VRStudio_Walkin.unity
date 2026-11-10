@@ -1058,8 +1058,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 800, y: 200, z: 60}
-  m_Center: {x: 10, y: 20, z: -50}
+  m_Size: {x: 422.6178, y: 186.8512, z: 60}
+  m_Center: {x: 229.74591, y: -60.979927, z: -49.999825}
 --- !u!1 &232143386
 GameObject:
   m_ObjectHideFlags: 0
@@ -1436,8 +1436,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 800, y: 200, z: 60}
-  m_Center: {x: 10, y: 20, z: -50}
+  m_Size: {x: 415.12048, y: 184.83328, z: 68.75018}
+  m_Center: {x: 229.83435, y: -61.089035, z: -45.624687}
 --- !u!1001 &245522904
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2805,7 +2805,7 @@ MonoBehaviour:
   m_SelectEntered:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1719518973}
+      - m_Target: {fileID: 1536862980}
         m_TargetAssemblyTypeName: NumberStepper, Assembly-CSharp
         m_MethodName: Increase
         m_Mode: 1
@@ -2862,8 +2862,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 1, y: 1, z: 34.913006}
+  m_Center: {x: 0.029999996, y: 0.029999994, z: 8.083785}
 --- !u!4 &534893162 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3815367952562115136, guid: d6878e1999eb4b44a9f5a263af86c185, type: 3}
@@ -3315,8 +3315,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 800, y: 200, z: 60}
-  m_Center: {x: 10, y: 20, z: -50}
+  m_Size: {x: 428.7977, y: 118.5075, z: 50.060204}
+  m_Center: {x: 261.5798, y: 34.304317, z: -54.969616}
 --- !u!1001 &580184872
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3671,7 +3671,7 @@ MonoBehaviour:
   m_SelectEntered:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1719518973}
+      - m_Target: {fileID: 566945813}
         m_TargetAssemblyTypeName: NumberStepper, Assembly-CSharp
         m_MethodName: Decrease
         m_Mode: 1
@@ -3728,8 +3728,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 1, y: 1, z: 29.688856}
+  m_Center: {x: 0.039999977, y: 0, z: 11.629991}
 --- !u!1 &621511044
 GameObject:
   m_ObjectHideFlags: 0
@@ -3791,7 +3791,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 658560458}
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: 0, y: 0, z: -65}
+  m_LocalPosition: {x: 0, y: 0, z: -39.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3815,7 +3815,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.02745098, g: 0.105882354, b: 0.13725491, a: 1}
+  m_Color: {r: 0.9607844, g: 0.9607844, b: 0.9607844, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -4665,7 +4665,7 @@ MonoBehaviour:
   m_SelectEntered:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1719518973}
+      - m_Target: {fileID: 1536862980}
         m_TargetAssemblyTypeName: NumberStepper, Assembly-CSharp
         m_MethodName: Decrease
         m_Mode: 1
@@ -4722,8 +4722,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 1, y: 1, z: 32.965336}
+  m_Center: {x: 1.7169646e-15, y: 0, z: 15.982672}
 --- !u!4 &958522320 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1722844120195055343, guid: 47b09cac83591f34f852a88760be03e1, type: 3}
@@ -4868,8 +4868,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 800, y: 200, z: 60}
-  m_Center: {x: 10, y: 20, z: -50}
+  m_Size: {x: 439.50787, y: 184.68045, z: 60.00003}
+  m_Center: {x: -239.23178, y: -64.18967, z: -49.999943}
 --- !u!1001 &1007198574
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6508,8 +6508,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 1, y: 1, z: 22.157671}
+  m_Center: {x: 2.0351428e-15, y: 0, z: 10.578839}
 --- !u!4 &1350330952 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 9046317350257196636, guid: d6878e1999eb4b44a9f5a263af86c185, type: 3}
@@ -8459,8 +8459,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 800, y: 200, z: 60}
-  m_Center: {x: 10, y: 20, z: -50}
+  m_Size: {x: 155.28615, y: 70.91074, z: 57.4639}
+  m_Center: {x: -456.50467, y: 430.35318, z: -74.41662}
 --- !u!1 &1719518969
 GameObject:
   m_ObjectHideFlags: 0
@@ -9816,8 +9816,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 800, y: 200, z: 60}
-  m_Center: {x: 10, y: 20, z: -50}
+  m_Size: {x: 424.3331, y: 205.92032, z: 60.000034}
+  m_Center: {x: -236.63661, y: -57.8714, z: -49.999954}
 --- !u!1 &1928548081
 GameObject:
   m_ObjectHideFlags: 0
@@ -10312,8 +10312,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 1, y: 1, z: 26.67117}
+  m_Center: {x: 2.8583508e-16, y: 0, z: 12.835585}
 --- !u!1 &1961015775
 GameObject:
   m_ObjectHideFlags: 0
@@ -10350,7 +10350,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0.000025749207}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1961015777
@@ -10459,8 +10459,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 800, y: 200, z: 60}
-  m_Center: {x: 10, y: 20, z: -50}
+  m_Size: {x: 170.35223, y: 84.945076, z: 60.00003}
+  m_Center: {x: -447.58737, y: 431.77728, z: -49.999866}
 --- !u!1 &1967579641
 GameObject:
   m_ObjectHideFlags: 0
@@ -10609,7 +10609,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6869307183406159552, guid: b626257f59476264596494302d8126a2, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -446.3
+      value: -446
       objectReference: {fileID: 0}
     - target: {fileID: 6869307183406159552, guid: b626257f59476264596494302d8126a2, type: 3}
       propertyPath: m_LocalPosition.y
@@ -10617,7 +10617,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6869307183406159552, guid: b626257f59476264596494302d8126a2, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -59.9
+      value: -41
       objectReference: {fileID: 0}
     - target: {fileID: 6869307183406159552, guid: b626257f59476264596494302d8126a2, type: 3}
       propertyPath: m_LocalRotation.w
@@ -11277,7 +11277,7 @@ MonoBehaviour:
   m_SelectEntered:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1719518973}
+      - m_Target: {fileID: 566945813}
         m_TargetAssemblyTypeName: NumberStepper, Assembly-CSharp
         m_MethodName: Increase
         m_Mode: 1
@@ -11334,8 +11334,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 1, y: 1, z: 22.071709}
+  m_Center: {x: 2.015597e-15, y: 0, z: 10.535857}
 --- !u!4 &2122280046 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1045626549347054401, guid: 062e9aea4e4e7c54b9bcd4ca310aafb9, type: 3}
