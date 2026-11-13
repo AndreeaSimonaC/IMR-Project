@@ -22,8 +22,7 @@ public class NewProjectSetup : MonoBehaviour
         int height = heightStepper.GetValue();
         int length = lengthStepper.GetValue();
 
-        if (width < 1 || height < 1 || length < 1 ||
-            width > MaxDimension || height > MaxDimension || length > MaxDimension)
+        if (width < 1 || height < 1 || length < 1 || width > MaxDimension || height > MaxDimension || length > MaxDimension)
         {
             Debug.LogWarning($"NewProjectSetup: Invalid workspace dimensions: {width} x {height} x {length}. " + $"Each dimension must be between 1 and {MaxDimension}.", this);
             return;

@@ -9,9 +9,9 @@ public static class ProjectSettings
     public static bool HasProject { get; private set; } = false;
     public static void SetDimensions(int width, int height, int length)
     {
-        Width = Mathf.Clamp(width, 1, 128);
-        Height = Mathf.Clamp(height, 1, 128);
-        Length = Mathf.Clamp(length, 1, 128);
+        Width = Mathf.Clamp(width, 1, 64);
+        Height = Mathf.Clamp(height, 1, 64);
+        Length = Mathf.Clamp(length, 1, 64);
         HasProject = true;
         Debug.Log($"ProjectSettings: Dimensions saved: {Width} x {Height} x {Length}");
     }

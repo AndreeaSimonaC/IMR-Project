@@ -1,4 +1,3 @@
-
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -9,6 +8,7 @@ public class HandToolButton : MonoBehaviour
 {
     [Header("Tool Settings")]
     [SerializeField] private HandTool tool;
+    [SerializeField] private ToolManager toolManager;
 
     [Header("Events")]
     [SerializeField] private UnityEvent onToolPressed;
@@ -22,6 +22,8 @@ public class HandToolButton : MonoBehaviour
     public void Press()
     {
         Debug.Log($"TOOL PRESSED: {tool} | Button: {gameObject.name}", this);
+        if (toolManager != null) { toolManager.SelectTool(tool); Debug.Log($"ToolManager activated: {tool}", this); }
+        else { Debug.LogWarning($"ToolManager not assigned on {gameObject.name}!", this); }
         onToolPressed?.Invoke();
     }
 }

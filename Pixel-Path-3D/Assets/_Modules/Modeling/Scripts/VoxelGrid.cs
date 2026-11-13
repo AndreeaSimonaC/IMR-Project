@@ -16,15 +16,10 @@ public class VoxelGrid : MonoBehaviour
 
     private void Start()
     {
-        if (gridFloor == null || gridLines == null)
-        {
-            Debug.LogError("VoxelGrid: Floor or lines not assigned!", this);
-            return;
-        }
+        if (gridFloor == null || gridLines == null) { Debug.LogError("VoxelGrid: Floor or lines not assigned!", this); return; }
 
         int width = ProjectSettings.Width;
         int length = ProjectSettings.Length;
-
         float floorWidth = width * voxelSize;
         float floorLength = length * voxelSize;
 
@@ -44,7 +39,6 @@ public class VoxelGrid : MonoBehaviour
 
         var vertices = new List<Vector3>();
         var triangles = new List<int>();
-
         float halfWidth = width * voxelSize / 2f;
         float halfLength = length * voxelSize / 2f;
         float y = 0.002f;
@@ -88,14 +82,95 @@ public class VoxelGrid : MonoBehaviour
         triangles.Add(index);
         triangles.Add(index + 2);
         triangles.Add(index + 1);
-
         triangles.Add(index);
         triangles.Add(index + 3);
         triangles.Add(index + 2);
     }
 
-    private void OnDestroy()
+    public float VoxelSize => voxelSize;
+
+    public Vector3Int WorldToVoxel(Vector3 worldPosition)
     {
-        if (generatedMesh != null) Destroy(generatedMesh);
+        Vector3 localPosition = transform.InverseTransformPoint(worldPosition);
+
+        float halfWidth = ProjectSettings.Width * voxelSize / 2f;
+        float halfLength = ProjectSettings.Length * voxelSize / 2f;
+
+        int x = Mathf.FloorToInt((localPosition.x + halfWidth) / voxelSize);
+        int y = Mathf.FloorToInt(localPosition.y / voxelSize);
+        int z = Mathf.FloorToInt((localPosition.z + halfLength) / voxelSize);
+
+        return new Vector3Int(x, y, z);
     }
+
+    public Vector3 VoxelToWorld(Vector3Int voxelPosition)
+    {
+        float halfWidth = ProjectSettings.Width * voxelSize / 2f;
+        float halfLength = ProjectSettings.Length * voxelSize / 2f;
+        Vector3 localPosition = new Vector3(-halfWidth + (voxelPosition.x + 0.5f) * voxelSize, (voxelPosition.y + 0.5f) * voxelSize, -halfLength + (voxelPosition.z + 0.5f) * voxelSize);
+
+        return transform.TransformPoint(localPosition);
+    }
+
+    public bool IsInsideGrid(Vector3Int voxelPosition) { return voxelPosition.x >= 0 && voxelPosition.x < ProjectSettings.Width && voxelPosition.y >= 0 && voxelPosition.y < ProjectSettings.Height && voxelPosition.z >= 0 && voxelPosition.z < ProjectSettings.Length; }
+
+#if UNITY_EDITOR
+
+    [ContextMenu("TEST - Coordinate Conversion")]
+    private void TestCoordinateConversion()
+    {
+        Vector3Int cell = new Vector3Int(2, 3, 4);
+
+        Vector3 world = VoxelToWorld(cell);
+        Vector3Int result = WorldToVoxel(world);
+
+        Debug.Log(
+            $"Coordinate test: {cell} -> {world} -> {result} | " +
+            $"Passed: {cell == result}",
+            this
+        );
+    }
+
+    [ContextMenu("TEST - Grid Boundaries")]
+    private void TestGridBoundaries()
+    {
+        Vector3Int firstCell = Vector3Int.zero;
+
+        Vector3Int lastCell = new Vector3Int(
+            ProjectSettings.Width - 1,
+            ProjectSettings.Height - 1,
+            ProjectSettings.Length - 1
+        );
+
+        Vector3Int outsideCell = new Vector3Int(
+            ProjectSettings.Width,
+            0,
+            0
+        );
+
+        Debug.Log(
+            $"First cell valid: {IsInsideGrid(firstCell)} | " +
+            $"Last cell valid: {IsInsideGrid(lastCell)} | " +
+            $"Outside cell invalid: {!IsInsideGrid(outsideCell)}",
+            this
+        );
+    }
+
+    [ContextMenu("TEST - Grid Dimensions")]
+    private void TestGridDimensions()
+    {
+        Debug.Log(
+            $"Grid: {ProjectSettings.Width} x " +
+            $"{ProjectSettings.Height} x " +
+            $"{ProjectSettings.Length} | " +
+            $"Voxel size: {voxelSize} | " +
+            $"Physical floor: {ProjectSettings.Width * voxelSize} x " +
+            $"{ProjectSettings.Length * voxelSize}",
+            this
+        );
+    }
+
+#endif
+
+    private void OnDestroy() { if (generatedMesh != null) Destroy(generatedMesh); }
 }
