@@ -119,11 +119,105 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &10318443
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 10318445}
+  - component: {fileID: 10318444}
+  m_Layer: 0
+  m_Name: MoveTool
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &10318444
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 10318443}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2312e51e635b4444d8b5abb5bffabce1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MoveTool
+  toolManager: {fileID: 226693686}
+  selectionManager: {fileID: 1453095244}
+  editOperations: {fileID: 765485522}
+--- !u!4 &10318445
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 10318443}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -8.83283, y: 0, z: 2.56877}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 945651184}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &15525637 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1779042027055162688, guid: d6878e1999eb4b44a9f5a263af86c185, type: 3}
   m_PrefabInstance: {fileID: 5534409079552104243}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &17051904
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 17051906}
+  - component: {fileID: 17051905}
+  m_Layer: 0
+  m_Name: RotateTool
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &17051905
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 17051904}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02b0a1efa1248d14cae8430b81cd6d52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RotateTool
+  toolManager: {fileID: 226693686}
+  selectionManager: {fileID: 1453095244}
+  editOperations: {fileID: 765485522}
+--- !u!4 &17051906
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 17051904}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -8.83283, y: 0, z: 2.56877}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 945651184}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &25568716 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2027157617934469268, guid: d6878e1999eb4b44a9f5a263af86c185, type: 3}
@@ -157,6 +251,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HandToolButton
   tool: 9
+  toolManager: {fileID: 0}
   onToolPressed:
     m_PersistentCalls:
       m_Calls: []
@@ -178,6 +273,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HandToolButton
   tool: 6
+  toolManager: {fileID: 0}
   onToolPressed:
     m_PersistentCalls:
       m_Calls: []
@@ -191,6 +287,7 @@ GameObject:
   m_Component:
   - component: {fileID: 115918065}
   - component: {fileID: 115918064}
+  - component: {fileID: 115918066}
   m_Layer: 0
   m_Name: EditorMouseInput
   m_TagString: Untagged
@@ -236,6 +333,29 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &115918066
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 115918063}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76b539ee82db92845a27d7b61a9f0a45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EditorVoxelToolInput
+  testCamera: {fileID: 1948693200}
+  toolManager: {fileID: 226693686}
+  selectTool: {fileID: 1582989236}
+  eraserTool: {fileID: 477029400}
+  moveTool: {fileID: 10318444}
+  rotateTool: {fileID: 17051905}
+  scaleTool: {fileID: 663581508}
+  targetLayers:
+    serializedVersion: 2
+    m_Bits: 8
+  maxDistance: 100
 --- !u!4 &125420059 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 285005686507933477, guid: d6878e1999eb4b44a9f5a263af86c185, type: 3}
@@ -259,6 +379,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HandToolButton
   tool: 0
+  toolManager: {fileID: 0}
   onToolPressed:
     m_PersistentCalls:
       m_Calls: []
@@ -561,6 +682,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HandToolButton
   tool: 7
+  toolManager: {fileID: 0}
   onToolPressed:
     m_PersistentCalls:
       m_Calls: []
@@ -637,6 +759,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HandToolButton
   tool: 10
+  toolManager: {fileID: 0}
   onToolPressed:
     m_PersistentCalls:
       m_Calls: []
@@ -668,9 +791,60 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HandToolButton
   tool: 12
+  toolManager: {fileID: 0}
   onToolPressed:
     m_PersistentCalls:
       m_Calls: []
+--- !u!1 &477029399
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 477029401}
+  - component: {fileID: 477029400}
+  m_Layer: 0
+  m_Name: EraserTool
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &477029400
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 477029399}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ec9a05ea3b739a43921463d2adef488, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EraserTool
+  toolManager: {fileID: 226693686}
+  voxelGrid: {fileID: 972695842}
+  voxelModel: {fileID: 972695843}
+  editOperations: {fileID: 765485522}
+  voxelRoot: {fileID: 163815137}
+  selectionManager: {fileID: 1453095244}
+--- !u!4 &477029401
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 477029399}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -8.83283, y: 0, z: 2.56877}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 945651184}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &506913308
 GameObject:
   m_ObjectHideFlags: 0
@@ -824,6 +998,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HandToolButton
   tool: 11
+  toolManager: {fileID: 0}
   onToolPressed:
     m_PersistentCalls:
       m_Calls: []
@@ -845,6 +1020,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HandToolButton
   tool: 0
+  toolManager: {fileID: 0}
   onToolPressed:
     m_PersistentCalls:
       m_Calls: []
@@ -994,6 +1170,53 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2148709721098371973, guid: d6878e1999eb4b44a9f5a263af86c185, type: 3}
   m_PrefabInstance: {fileID: 5534409079552104243}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &663581507
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 663581509}
+  - component: {fileID: 663581508}
+  m_Layer: 0
+  m_Name: ScaleTool
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &663581508
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 663581507}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58f67b5ddc9ec8b47b1acf2cd0c8e030, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ScaleTool
+  toolManager: {fileID: 226693686}
+  selectionManager: {fileID: 1453095244}
+  editOperations: {fileID: 765485522}
+--- !u!4 &663581509
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 663581507}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -8.83283, y: 0, z: 2.56877}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 945651184}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &666848232 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5765642959978568462, guid: d6878e1999eb4b44a9f5a263af86c185, type: 3}
@@ -1037,9 +1260,57 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HandToolButton
   tool: 0
+  toolManager: {fileID: 0}
   onToolPressed:
     m_PersistentCalls:
       m_Calls: []
+--- !u!1 &765485521
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 765485523}
+  - component: {fileID: 765485522}
+  m_Layer: 0
+  m_Name: VoxelEditOperations
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &765485522
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 765485521}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f46971899b786ac49adfb345b6b98845, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::VoxelEditOperations
+  voxelModel: {fileID: 972695843}
+  voxelGrid: {fileID: 972695842}
+  selectionManager: {fileID: 1453095244}
+--- !u!4 &765485523
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 765485521}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -8.83283, y: 0, z: 2.56877}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &787272619 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7567148663521636403, guid: d6878e1999eb4b44a9f5a263af86c185, type: 3}
@@ -1140,6 +1411,43 @@ Transform:
   - {fileID: 1120547866}
   - {fileID: 972695840}
   m_Father: {fileID: 1047920652}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &945651183
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 945651184}
+  m_Layer: 0
+  m_Name: ModelingTools
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &945651184
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 945651183}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1582989237}
+  - {fileID: 477029401}
+  - {fileID: 10318445}
+  - {fileID: 17051906}
+  - {fileID: 663581509}
+  - {fileID: 1921966677}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &972695839
 GameObject:
@@ -2104,6 +2412,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HandToolButton
   tool: 8
+  toolManager: {fileID: 0}
   onToolPressed:
     m_PersistentCalls:
       m_Calls: []
@@ -2117,6 +2426,52 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8834728037239060807, guid: d6878e1999eb4b44a9f5a263af86c185, type: 3}
   m_PrefabInstance: {fileID: 5534409079552104243}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1453095243
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1453095245}
+  - component: {fileID: 1453095244}
+  m_Layer: 0
+  m_Name: SelectionManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1453095244
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1453095243}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0320a635c6a439c40a4154996266d3ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SelectionManager
+  voxelModel: {fileID: 972695843}
+  toolManager: {fileID: 226693686}
+--- !u!4 &1453095245
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1453095243}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -8.83283, y: 0, z: 2.56877}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1468541027 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4735366321682462626, guid: d6878e1999eb4b44a9f5a263af86c185, type: 3}
@@ -2406,6 +2761,55 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3423743880514380129, guid: d6878e1999eb4b44a9f5a263af86c185, type: 3}
   m_PrefabInstance: {fileID: 5534409079552104243}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1582989235
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1582989237}
+  - component: {fileID: 1582989236}
+  m_Layer: 0
+  m_Name: SelectTool
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1582989236
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1582989235}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e999dfed4be97b4479d942e407782cfd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SelectTool
+  toolManager: {fileID: 226693686}
+  voxelGrid: {fileID: 972695842}
+  voxelModel: {fileID: 972695843}
+  voxelRoot: {fileID: 163815137}
+  selectionManager: {fileID: 1453095244}
+--- !u!4 &1582989237
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1582989235}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -8.83283, y: 0, z: 2.56877}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 945651184}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1620498541 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3226461992304410335, guid: 8dd6c3a19ccd3d045adc4a7f31fd097f, type: 3}
@@ -2444,6 +2848,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HandToolButton
   tool: 1
+  toolManager: {fileID: 0}
   onToolPressed:
     m_PersistentCalls:
       m_Calls: []
@@ -2465,6 +2870,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HandToolButton
   tool: 0
+  toolManager: {fileID: 0}
   onToolPressed:
     m_PersistentCalls:
       m_Calls: []
@@ -2719,9 +3125,59 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HandToolButton
   tool: 0
+  toolManager: {fileID: 0}
   onToolPressed:
     m_PersistentCalls:
       m_Calls: []
+--- !u!1 &1909099459
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1909099461}
+  - component: {fileID: 1909099460}
+  m_Layer: 0
+  m_Name: SelectionHighlight
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1909099460
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1909099459}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b9e75c8db7ae82f4d9542ac6d1c581dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SelectionHighlight
+  selectionManager: {fileID: 1453095244}
+  voxelGrid: {fileID: 972695842}
+  highlightColor: {r: 0.85882354, g: 0.16862746, b: 0.5686275, a: 1}
+  lineThickness: 0.06
+  outlineSize: 1.04
+--- !u!4 &1909099461
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1909099459}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.84431, y: 0, z: -2.1355}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1921966675
 GameObject:
   m_ObjectHideFlags: 0
@@ -2766,12 +3222,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1921966675}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -7.89557, y: 0, z: 1.87276}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 945651184}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1941636608 stripped
 Transform:
@@ -3881,9 +4337,12 @@ SceneRoots:
   - {fileID: 3856216811156220743}
   - {fileID: 2090715966}
   - {fileID: 226693687}
+  - {fileID: 1909099461}
   - {fileID: 379646075}
   - {fileID: 1243133803}
   - {fileID: 1188575003}
   - {fileID: 115918065}
-  - {fileID: 1921966677}
   - {fileID: 549994667}
+  - {fileID: 1453095245}
+  - {fileID: 765485523}
+  - {fileID: 945651184}
