@@ -13,7 +13,8 @@ public class XRToolKeyboardDebug : MonoBehaviour
     [SerializeField] private MoveTool moveTool;
     [SerializeField] private RotateTool rotateTool;
     [SerializeField] private ScaleTool scaleTool;
-
+    [SerializeField] private ColorPaletteManager colorManager;
+    [SerializeField] private VoxelPaintTool paintTool;
     [Header("Debug")]
     [SerializeField] private bool logActions = true;
 
@@ -29,10 +30,20 @@ public class XRToolKeyboardDebug : MonoBehaviour
         else if (keyboard.digit4Key.wasPressedThisFrame) ActivateTool(HandTool.Move);
         else if (keyboard.digit5Key.wasPressedThisFrame) ActivateTool(HandTool.Rotate);
         else if (keyboard.digit6Key.wasPressedThisFrame) ActivateTool(HandTool.Scale);
-
+        if (colorManager != null)
+        {
+            if (keyboard.digit7Key.wasPressedThisFrame)
+            {
+                Debug.Log($"[COLOR DEBUG] 7 pressed | Manager={colorManager != null}");
+                if (colorManager != null) colorManager.SetColor(Color.red);
+            }
+            if (keyboard.digit8Key.wasPressedThisFrame) colorManager.SetColor(new Color32(77, 204, 128, 255));
+            if (keyboard.digit9Key.wasPressedThisFrame) colorManager.SetColor(new Color32(85, 157, 255, 255));
+            if (keyboard.digit0Key.wasPressedThisFrame) colorManager.SetColor(Color.white);
+        }
         bool shift = keyboard.leftShiftKey.isPressed || keyboard.rightShiftKey.isPressed;
         if (!shift) return;
-
+        if (keyboard.fKey.wasPressedThisFrame) { LogAction("Paint Selected", paintTool != null && paintTool.PaintSelected()); }
         switch (toolManager.ActiveTool)
         {
             case HandTool.Brush:
@@ -44,8 +55,7 @@ public class XRToolKeyboardDebug : MonoBehaviour
                 break;
 
             case HandTool.Eraser:
-                if (keyboard.eKey.wasPressedThisFrame)
-                    LogAction("Eraser", eraserTool != null && eraserTool.EraseTarget());
+                if (keyboard.eKey.wasPressedThisFrame) LogAction("Eraser", eraserTool != null && eraserTool.EraseTarget());
                 break;
 
             case HandTool.Select:
@@ -59,7 +69,6 @@ public class XRToolKeyboardDebug : MonoBehaviour
 
             case HandTool.Move:
                 if (moveTool == null) break;
-
                 if (keyboard.iKey.wasPressedThisFrame) LogAction("Move Forward", moveTool.MoveForward());
                 if (keyboard.kKey.wasPressedThisFrame) LogAction("Move Backward", moveTool.MoveBackward());
                 if (keyboard.jKey.wasPressedThisFrame) LogAction("Move Left", moveTool.MoveLeft());
@@ -77,8 +86,7 @@ public class XRToolKeyboardDebug : MonoBehaviour
                 break;
 
             case HandTool.Scale:
-                if (keyboard.gKey.wasPressedThisFrame)
-                    LogAction("Scale 2x", scaleTool != null && scaleTool.ScaleUniform2());
+                if (keyboard.gKey.wasPressedThisFrame) LogAction("Scale 2x", scaleTool != null && scaleTool.ScaleUniform2());
                 break;
         }
     }

@@ -9,6 +9,7 @@ public class BrushTool : MonoBehaviour
     [SerializeField] private Collider gridFloorCollider;
     [SerializeField] private Transform voxelRoot;
     [SerializeField] private GameObject previewPrefab;
+    [SerializeField] private ColorPaletteManager colorManager;
 
     [Header("Brush Settings")]
     [SerializeField] private Color brushColor = Color.white;
@@ -132,9 +133,10 @@ public class BrushTool : MonoBehaviour
         if (!voxelGrid.IsInsideGrid(targetCell)) { Debug.LogWarning($"BrushTool: Outside grid {targetCell}", this); ClearTarget(); return; }
         if (voxelModel.HasVoxel(targetCell)) { Debug.LogWarning($"BrushTool: Cell occupied {targetCell}", this); ClearTarget(); return; }
 
-        bool placed = voxelModel.AddVoxel(targetCell, brushColor);
+        Color color = colorManager != null ? colorManager.CurrentColor : brushColor;
+        bool placed = voxelModel.AddVoxel(targetCell, color);
 
-        if (placed) { Debug.Log($"BRUSH: Placed voxel at {targetCell} | Color: {brushColor}", this); ClearTarget(); }
+        if (placed) { Debug.Log($"BRUSH: Placed voxel at {targetCell} | Color: {color}", this); ClearTarget(); }
         else { Debug.LogWarning($"BrushTool: Placement failed at {targetCell}", this); }
     }
 
