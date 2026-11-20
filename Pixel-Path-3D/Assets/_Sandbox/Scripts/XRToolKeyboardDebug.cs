@@ -21,6 +21,7 @@ public class XRToolKeyboardDebug : MonoBehaviour
     [SerializeField] private HandToolButton deleteButton;
     [SerializeField] private HandToolButton groupButton;
     [SerializeField] private HandToolButton ungroupButton;
+    [SerializeField] private HSVAddToPalette hsvAddToPalette;
     [Header("Debug")]
     [SerializeField] private bool logActions = true;
 
@@ -57,6 +58,15 @@ public class XRToolKeyboardDebug : MonoBehaviour
         if (keyboard.fKey.wasPressedThisFrame) { LogAction("Paint Selected", paintTool != null && paintTool.PaintSelected()); }
 
         if (keyboard.hKey.wasPressedThisFrame) PressOptionalButton(colorPickerButton, "Color Picker");
+        if (keyboard.aKey.wasPressedThisFrame)
+        {
+            if (hsvAddToPalette != null)
+            {
+                hsvAddToPalette.AddColor();
+                LogExecuted("HSV Add To Palette");
+            }
+            else { Debug.LogWarning("[HSV DEBUG] HSVAddToPalette is not assigned!", this); }
+        }
         if (keyboard.dKey.wasPressedThisFrame) PressOptionalButton(duplicateButton, "Duplicate");
         if (keyboard.deleteKey.wasPressedThisFrame) PressOptionalButton(deleteButton, "Delete");
         if (keyboard.yKey.wasPressedThisFrame) PressOptionalButton(groupButton, "Group");

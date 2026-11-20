@@ -29,7 +29,12 @@ public class ColorSwatchButton : MonoBehaviour
         if (colorManager == null) { Debug.LogWarning("[ColorSwatch] Color manager missing!", this); return; }
         colorManager.SetColor(swatchColor);
     }
-
+    public void SetSwatchColor(Color newColor)
+    {
+        swatchColor = newColor;
+        if (propertyBlock == null) propertyBlock = new MaterialPropertyBlock();
+        UpdateVisual();
+    }
     private void UpdateVisual()
     {
         if (colorRenderer == null) return;
