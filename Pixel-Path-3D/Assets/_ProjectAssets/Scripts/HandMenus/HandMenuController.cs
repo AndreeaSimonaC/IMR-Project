@@ -1,5 +1,6 @@
-
+using System;
 using UnityEngine;
+public enum PalmMenuTab { None, Model, Edit, Color }
 
 public class HandMenuController : MonoBehaviour
 {
@@ -7,64 +8,73 @@ public class HandMenuController : MonoBehaviour
     [SerializeField] private GameObject leftPalmModelMenu;
     [SerializeField] private GameObject rightPalmEditMenu;
     [SerializeField] private GameObject rightPalmColorMenu;
+    [SerializeField] private GameObject leftPalmColorPalette;
+
+    public PalmMenuTab ActiveTab { get; private set; } = PalmMenuTab.None;
+    public event Action<PalmMenuTab> OnTabChanged;
 
     private void Start()
     {
-        Debug.Log("HandMenuController: Initialized.", this);
         CloseAllMenus();
+        Debug.Log("HandMenuController: Initialized.", this);
     }
 
-    public void OpenModelMenu()
-    {
-        Debug.Log("LEFT HAND - Model label pressed!", this);
-        ShowMenu(leftPalmModelMenu);
-    }
+    public void OpenModelMenu() { SetTab(PalmMenuTab.Model); }
 
-    public void OpenEditMenu()
-    {
-        Debug.Log("LEFT HAND - Edit label pressed!", this);
-        ShowMenu(rightPalmEditMenu);
-    }
+    public void OpenEditMenu() { SetTab(PalmMenuTab.Edit); }
 
-    public void OpenColorMenu()
+    public void OpenColorMenu() { SetTab(PalmMenuTab.Color); }
+
+    public void OpenColorPalette()
     {
-        Debug.Log("LEFT HAND - Color label pressed!", this);
-        ShowMenu(rightPalmColorMenu);
+        bool wasColorOpen = ActiveTab == PalmMenuTab.Color;
+        bool paletteWasOpen = leftPalmColorPalette != null && leftPalmColorPalette.activeSelf;
+        SetTab(PalmMenuTab.Color);
+        if (leftPalmColorPalette != null) leftPalmColorPalette.SetActive(!wasColorOpen || !paletteWasOpen);
     }
 
     public void CloseAllMenus()
     {
-        if (leftPalmModelMenu != null) leftPalmModelMenu.SetActive(false);
-        if (rightPalmEditMenu != null) rightPalmEditMenu.SetActive(false);
-        if (rightPalmColorMenu != null) rightPalmColorMenu.SetActive(false);
-        Debug.Log("HandMenuController: All palm menus closed.", this);
+        SetActive(leftPalmModelMenu, false);
+        SetActive(rightPalmEditMenu, false);
+        SetActive(rightPalmColorMenu, false);
+        SetActive(leftPalmColorPalette, false);
+
+        ActiveTab = PalmMenuTab.None;
+        OnTabChanged?.Invoke(ActiveTab);
+
+        Debug.Log("HandMenuController: All menus closed.", this);
     }
 
-    public void PressBack()
+    public void PressBack() { CloseAllMenus(); }
+
+    private void SetTab(PalmMenuTab tab)
     {
-        Debug.Log("BACK button pressed!", this);
-        CloseAllMenus();
+        if (tab == PalmMenuTab.None) { CloseAllMenus(); return; }
+        if (ActiveTab == tab) return;
+
+        ActiveTab = tab;
+
+        SetActive(leftPalmModelMenu, tab == PalmMenuTab.Model);
+        SetActive(rightPalmEditMenu, tab == PalmMenuTab.Edit);
+        SetActive(rightPalmColorMenu, tab == PalmMenuTab.Color);
+        SetActive(leftPalmColorPalette, false);
+
+        OnTabChanged?.Invoke(ActiveTab);
+        Debug.Log($"[Palm Menu] Active tab: {tab}", this);
     }
 
-    private void ShowMenu(GameObject selectedMenu)
-    {
-        if (selectedMenu == null)
-        {
-            Debug.LogWarning("HandMenuController: Menu reference missing!", this);
-            return;
-        }
-
-        bool shouldOpen = !selectedMenu.activeSelf;
-        CloseAllMenus();
-        selectedMenu.SetActive(shouldOpen);
-        Debug.Log(shouldOpen ? $"MENU OPENED: {selectedMenu.name}" : $"MENU CLOSED: {selectedMenu.name}", this);
-    }
+    private void SetActive(GameObject target, bool value) { if (target != null) target.SetActive(value); }
 
     [ContextMenu("TEST - Open Model")]
-    private void TestModel() { OpenModelMenu();}
-    [ContextMenu("TEST - Open Edit")] 
-    private void TestEdit() { OpenEditMenu(); }
+    private void TestModel() => OpenModelMenu();
+
+    [ContextMenu("TEST - Open Edit")]
+    private void TestEdit() => OpenEditMenu();
 
     [ContextMenu("TEST - Open Color")]
-    private void TestColor() { OpenColorMenu(); }
+    private void TestColor() => OpenColorMenu();
+
+    [ContextMenu("TEST - Open Color Palette")]
+    private void TestPalette() => OpenColorPalette();
 }

@@ -15,6 +15,12 @@ public class XRToolKeyboardDebug : MonoBehaviour
     [SerializeField] private ScaleTool scaleTool;
     [SerializeField] private ColorPaletteManager colorManager;
     [SerializeField] private VoxelPaintTool paintTool;
+    [SerializeField] private HandMenuController handMenuController;
+    [SerializeField] private HandToolButton colorPickerButton;
+    [SerializeField] private HandToolButton duplicateButton;
+    [SerializeField] private HandToolButton deleteButton;
+    [SerializeField] private HandToolButton groupButton;
+    [SerializeField] private HandToolButton ungroupButton;
     [Header("Debug")]
     [SerializeField] private bool logActions = true;
 
@@ -41,9 +47,20 @@ public class XRToolKeyboardDebug : MonoBehaviour
             if (keyboard.digit9Key.wasPressedThisFrame) colorManager.SetColor(new Color32(85, 157, 255, 255));
             if (keyboard.digit0Key.wasPressedThisFrame) colorManager.SetColor(Color.white);
         }
+        if (keyboard.mKey.wasPressedThisFrame) OpenDebugMenu(PalmMenuTab.Model);
+        if (keyboard.nKey.wasPressedThisFrame) OpenDebugMenu(PalmMenuTab.Edit);
+        if (keyboard.cKey.wasPressedThisFrame) OpenDebugMenu(PalmMenuTab.Color);
+        if (keyboard.xKey.wasPressedThisFrame) OpenDebugMenu(PalmMenuTab.None);
+
         bool shift = keyboard.leftShiftKey.isPressed || keyboard.rightShiftKey.isPressed;
         if (!shift) return;
         if (keyboard.fKey.wasPressedThisFrame) { LogAction("Paint Selected", paintTool != null && paintTool.PaintSelected()); }
+
+        if (keyboard.hKey.wasPressedThisFrame) PressOptionalButton(colorPickerButton, "Color Picker");
+        if (keyboard.dKey.wasPressedThisFrame) PressOptionalButton(duplicateButton, "Duplicate");
+        if (keyboard.deleteKey.wasPressedThisFrame) PressOptionalButton(deleteButton, "Delete");
+        if (keyboard.yKey.wasPressedThisFrame) PressOptionalButton(groupButton, "Group");
+        if (keyboard.zKey.wasPressedThisFrame) PressOptionalButton(ungroupButton, "Ungroup");
         switch (toolManager.ActiveTool)
         {
             case HandTool.Brush:
@@ -96,7 +113,31 @@ public class XRToolKeyboardDebug : MonoBehaviour
         toolManager.SelectTool(tool);
         if (logActions) Debug.Log($"[XR Keyboard Debug] Activated: {tool}", this);
     }
+    private void OpenDebugMenu(PalmMenuTab tab)
+    {
+        if (handMenuController == null) { Debug.LogWarning("[MENU DEBUG] HandMenuController is NOT assigned!", this); return; }
 
+        switch (tab)
+        {
+            case PalmMenuTab.Model:
+                handMenuController.OpenModelMenu();
+                break;
+
+            case PalmMenuTab.Edit:
+                handMenuController.OpenEditMenu();
+                break;
+
+            case PalmMenuTab.Color:
+                handMenuController.OpenColorPalette();
+                break;
+
+            case PalmMenuTab.None:
+                handMenuController.PressBack();
+                break;
+        }
+
+        Debug.Log($"[MENU DEBUG] Requested: {tab}", this);
+    }
     private void LogAction(string action, bool success)
     {
         if (logActions) Debug.Log($"[XR Keyboard Debug] {action}: {(success ? "SUCCESS" : "FAILED")}", this);
@@ -105,6 +146,12 @@ public class XRToolKeyboardDebug : MonoBehaviour
     private void LogExecuted(string action)
     {
         if (logActions) Debug.Log($"[XR Keyboard Debug] {action}: Executed", this);
+    }
+    private void PressOptionalButton(HandToolButton button, string action)
+    {
+        if (button == null) { Debug.LogWarning($"[XR Keyboard Debug] {action}: Button not assigned.", this); return; }
+        button.Press();
+        LogExecuted(action);
     }
 }
 
