@@ -8,7 +8,7 @@ public class NewProjectSetup : MonoBehaviour
     [SerializeField] private NumberStepper heightStepper;
     [SerializeField] private NumberStepper lengthStepper;
     [SerializeField] private string modelingScene = "Modeling_Main";
-    private const int MaxDimension = 128;
+    private const int MaxDimension = 64;
 
     public void StartProject()
     {

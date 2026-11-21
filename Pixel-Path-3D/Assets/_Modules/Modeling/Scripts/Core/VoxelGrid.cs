@@ -124,29 +124,15 @@ public class VoxelGrid : MonoBehaviour
         Vector3 world = VoxelToWorld(cell);
         Vector3Int result = WorldToVoxel(world);
 
-        Debug.Log(
-            $"Coordinate test: {cell} -> {world} -> {result} | " +
-            $"Passed: {cell == result}",
-            this
-        );
+        Debug.Log($"Coordinate test: {cell} -> {world} -> {result} | " + $"Passed: {cell == result}", this);
     }
 
     [ContextMenu("TEST - Grid Boundaries")]
     private void TestGridBoundaries()
     {
         Vector3Int firstCell = Vector3Int.zero;
-
-        Vector3Int lastCell = new Vector3Int(
-            ProjectSettings.Width - 1,
-            ProjectSettings.Height - 1,
-            ProjectSettings.Length - 1
-        );
-
-        Vector3Int outsideCell = new Vector3Int(
-            ProjectSettings.Width,
-            0,
-            0
-        );
+        Vector3Int lastCell = new Vector3Int(ProjectSettings.Width - 1, ProjectSettings.Height - 1, ProjectSettings.Length - 1);
+        Vector3Int outsideCell = new Vector3Int(ProjectSettings.Width, 0, 0);
 
         Debug.Log(
             $"First cell valid: {IsInsideGrid(firstCell)} | " +
