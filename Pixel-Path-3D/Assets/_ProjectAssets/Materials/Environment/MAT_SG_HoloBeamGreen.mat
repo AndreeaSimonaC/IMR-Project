@@ -22,7 +22,7 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: MAT_SG_HoloBeamGreen
   m_Shader: {fileID: -6465566751694194690, guid: 9f582459628459845bf45fbdd8617fdb, type: 3}
-  m_Parent: {fileID: 0}
+  m_Parent: {fileID: 2100000, guid: 7a92954b405990540b9ca5eaabbcd62a, type: 2}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
   m_InvalidKeywords: []
@@ -36,25 +36,9 @@ Material:
   m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
-    m_TexEnvs:
-    - unity_Lightmaps:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - unity_LightmapsInd:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - unity_ShadowMasks:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
+    m_TexEnvs: []
     m_Ints: []
-    m_Floats:
-    - _BeamOpacity: 0.2
-    - _QueueControl: 0
-    - _QueueOffset: 0
-    - _XRMotionVectorsPass: 1
+    m_Floats: []
     m_Colors:
     - _BeamColor: {r: 0.06666667, g: 0.69411767, b: 0, a: 0.5529412}
   m_BuildTextureStacks: []

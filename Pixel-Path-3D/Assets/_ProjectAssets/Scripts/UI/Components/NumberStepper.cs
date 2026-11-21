@@ -8,7 +8,7 @@ public class NumberStepper : MonoBehaviour
     [SerializeField] private TMP_Text valueText;
     [SerializeField] private int value = 32;
     [SerializeField] private int min = 1;
-    [SerializeField] private int max = 128;
+    [SerializeField] private int max = 64;
     [SerializeField] private int step = 1;
 
     public UnityEvent<int> onValueChanged;
