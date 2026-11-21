@@ -22,6 +22,8 @@ public class XRToolKeyboardDebug : MonoBehaviour
     [SerializeField] private HandToolButton groupButton;
     [SerializeField] private HandToolButton ungroupButton;
     [SerializeField] private HSVAddToPalette hsvAddToPalette;
+    [SerializeField] private CustomPalettePagination customPagination;
+
     [Header("Debug")]
     [SerializeField] private bool logActions = true;
 
@@ -57,7 +59,7 @@ public class XRToolKeyboardDebug : MonoBehaviour
         if (!shift) return;
         if (keyboard.fKey.wasPressedThisFrame) { LogAction("Paint Selected", paintTool != null && paintTool.PaintSelected()); }
 
-        if (keyboard.hKey.wasPressedThisFrame) PressOptionalButton(colorPickerButton, "Color Picker");
+        if (keyboard.pKey.wasPressedThisFrame) { ActivateTool(HandTool.ColorPicker); }
         if (keyboard.aKey.wasPressedThisFrame)
         {
             if (hsvAddToPalette != null)
@@ -66,6 +68,16 @@ public class XRToolKeyboardDebug : MonoBehaviour
                 LogExecuted("HSV Add To Palette");
             }
             else { Debug.LogWarning("[HSV DEBUG] HSVAddToPalette is not assigned!", this); }
+        }
+        if (keyboard.jKey.wasPressedThisFrame && customPagination != null)
+        {
+            customPagination.PreviousPage();
+            LogExecuted("Custom Palette - Previous Page");
+        }
+        if (keyboard.lKey.wasPressedThisFrame && customPagination != null)
+        {
+            customPagination.NextPage();
+            LogExecuted("Custom Palette - Next Page");
         }
         if (keyboard.dKey.wasPressedThisFrame) PressOptionalButton(duplicateButton, "Duplicate");
         if (keyboard.deleteKey.wasPressedThisFrame) PressOptionalButton(deleteButton, "Delete");
@@ -98,8 +110,8 @@ public class XRToolKeyboardDebug : MonoBehaviour
                 if (moveTool == null) break;
                 if (keyboard.iKey.wasPressedThisFrame) LogAction("Move Forward", moveTool.MoveForward());
                 if (keyboard.kKey.wasPressedThisFrame) LogAction("Move Backward", moveTool.MoveBackward());
-                if (keyboard.jKey.wasPressedThisFrame) LogAction("Move Left", moveTool.MoveLeft());
-                if (keyboard.lKey.wasPressedThisFrame) LogAction("Move Right", moveTool.MoveRight());
+                if (!shift && keyboard.jKey.wasPressedThisFrame) LogAction("Move Left", moveTool.MoveLeft());
+                if (!shift && keyboard.lKey.wasPressedThisFrame) LogAction("Move Right", moveTool.MoveRight());
                 if (keyboard.uKey.wasPressedThisFrame) LogAction("Move Up", moveTool.MoveUp());
                 if (keyboard.oKey.wasPressedThisFrame) LogAction("Move Down", moveTool.MoveDown());
                 break;

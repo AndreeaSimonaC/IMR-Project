@@ -2058,6 +2058,7 @@ GameObject:
   m_Component:
   - component: {fileID: 615940209}
   - component: {fileID: 615940210}
+  - component: {fileID: 615940211}
   m_Layer: 0
   m_Name: XRSelectInput
   m_TagString: Untagged
@@ -2095,6 +2096,27 @@ MonoBehaviour:
   coordinator: {fileID: 948345324}
   toolManager: {fileID: 1928403242}
   selectTool: {fileID: 1189714295}
+  voxelGrid: {fileID: 972695842}
+  voxelModel: {fileID: 962505121}
+  expandedMenus:
+  - {fileID: 0}
+  - {fileID: 1155272093}
+  - {fileID: 1828059409}
+--- !u!114 &615940211
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 615940208}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aee52645729989946bd40cad0b3cd2db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::XRColorPickerInput
+  coordinator: {fileID: 948345324}
+  toolManager: {fileID: 1928403242}
+  colorPickerTool: {fileID: 1189714296}
   voxelGrid: {fileID: 972695842}
   voxelModel: {fileID: 962505121}
   expandedMenus:
@@ -2297,6 +2319,10 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: -1004719081729216295, guid: 1d3f354aa68f6bf40aae5885291b6ce9, type: 3}
+    - target: {fileID: 2069911127098375717, guid: c9aa994b6672750469f15472eb7ca2e4, type: 3}
+      propertyPath: colorManager
+      value: 
+      objectReference: {fileID: 374909674}
     - target: {fileID: 2283727359960793602, guid: c9aa994b6672750469f15472eb7ca2e4, type: 3}
       propertyPath: m_Materials.Array.size
       value: 1
@@ -3005,6 +3031,38 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3697294060756705151, guid: a498f7dc21ac2d7429bedfd68db6da37, type: 3}
+      propertyPath: 'swatches.Array.data[0]'
+      value: 
+      objectReference: {fileID: 581304441}
+    - target: {fileID: 3697294060756705151, guid: a498f7dc21ac2d7429bedfd68db6da37, type: 3}
+      propertyPath: 'swatches.Array.data[1]'
+      value: 
+      objectReference: {fileID: 656506419}
+    - target: {fileID: 3697294060756705151, guid: a498f7dc21ac2d7429bedfd68db6da37, type: 3}
+      propertyPath: 'swatches.Array.data[2]'
+      value: 
+      objectReference: {fileID: 1712172081}
+    - target: {fileID: 3697294060756705151, guid: a498f7dc21ac2d7429bedfd68db6da37, type: 3}
+      propertyPath: 'swatches.Array.data[3]'
+      value: 
+      objectReference: {fileID: 1354566232}
+    - target: {fileID: 3697294060756705151, guid: a498f7dc21ac2d7429bedfd68db6da37, type: 3}
+      propertyPath: 'swatches.Array.data[4]'
+      value: 
+      objectReference: {fileID: 1971300635}
+    - target: {fileID: 3697294060756705151, guid: a498f7dc21ac2d7429bedfd68db6da37, type: 3}
+      propertyPath: 'swatches.Array.data[5]'
+      value: 
+      objectReference: {fileID: 798102361}
+    - target: {fileID: 3697294060756705151, guid: a498f7dc21ac2d7429bedfd68db6da37, type: 3}
+      propertyPath: 'swatches.Array.data[6]'
+      value: 
+      objectReference: {fileID: 2098486001}
+    - target: {fileID: 3697294060756705151, guid: a498f7dc21ac2d7429bedfd68db6da37, type: 3}
+      propertyPath: 'swatches.Array.data[7]'
+      value: 
+      objectReference: {fileID: 1898281621}
     - target: {fileID: 8917664979043651717, guid: a498f7dc21ac2d7429bedfd68db6da37, type: 3}
       propertyPath: m_Name
       value: LeftPalmColorPalette
@@ -4515,6 +4573,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1189714294}
   - component: {fileID: 1189714295}
+  - component: {fileID: 1189714296}
   m_Layer: 0
   m_Name: SelectTool
   m_TagString: Untagged
@@ -4554,6 +4613,22 @@ MonoBehaviour:
   voxelModel: {fileID: 962505121}
   voxelRoot: {fileID: 258689353}
   selectionManager: {fileID: 545909709}
+--- !u!114 &1189714296
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1189714293}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25a7f1bf3bc6e2c4e9cf990f925e7b44, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ColorPickerTool
+  toolManager: {fileID: 1928403242}
+  voxelGrid: {fileID: 972695842}
+  voxelModel: {fileID: 962505121}
+  colorManager: {fileID: 374909674}
 --- !u!1 &1240689852
 GameObject:
   m_ObjectHideFlags: 0
@@ -5499,6 +5574,7 @@ MonoBehaviour:
   groupButton: {fileID: 0}
   ungroupButton: {fileID: 0}
   hsvAddToPalette: {fileID: 1479511704}
+  customPagination: {fileID: 1568924094}
   logActions: 1
 --- !u!1 &1448595280
 GameObject:
@@ -5790,15 +5866,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::HSVAddToPalette
   colorPicker: {fileID: 1586491633}
   addButtonCollider: {fileID: 1782201544}
-  customSwatches:
-  - {fileID: 581304441}
-  - {fileID: 656506419}
-  - {fileID: 1712172081}
-  - {fileID: 1354566232}
-  - {fileID: 1971300635}
-  - {fileID: 798102361}
-  - {fileID: 2098486001}
-  - {fileID: 1898281621}
+  pagination: {fileID: 1568924094}
   touchDistance: 0.015
   releaseDistance: 0.025
 --- !u!4 &1485084023 stripped
@@ -6419,6 +6487,17 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 8917664979043651717, guid: a498f7dc21ac2d7429bedfd68db6da37, type: 3}
   m_PrefabInstance: {fileID: 788651649}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1568924094 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3697294060756705151, guid: a498f7dc21ac2d7429bedfd68db6da37, type: 3}
+  m_PrefabInstance: {fileID: 788651649}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1568924093}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ff5550cd6c86bb42a7b832fa601c825, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CustomPalettePagination
 --- !u!4 &1586491632 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3931255828153840234, guid: c9aa994b6672750469f15472eb7ca2e4, type: 3}

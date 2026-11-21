@@ -15,6 +15,8 @@ public class HSVColorPicker : MonoBehaviour
     [Header("Gradient Tracks")]
     public Renderer saturationTrack;
     public Renderer valueTrack;
+    [Header("Color Manager")]
+    public ColorPaletteManager colorManager;
 
     [Header("Shader Graph Properties")]
     public string saturationColorProperty = "_HueColor";
@@ -27,6 +29,8 @@ public class HSVColorPicker : MonoBehaviour
         if (hueSlider != null) hueSlider.OnValueChanged += HandleValueChanged;
         if (saturationSlider != null) saturationSlider.OnValueChanged += HandleValueChanged;
         if (valueSlider != null) valueSlider.OnValueChanged += HandleValueChanged;
+        if (colorManager != null) colorManager.OnColorChanged += SyncFromColor;
+        SyncFromCurrentColor();
     }
 
     private void Start()
@@ -35,7 +39,7 @@ public class HSVColorPicker : MonoBehaviour
         if (saturationSlider != null) saturationSlider.SetValue(saturationSlider.value);
         if (valueSlider != null) valueSlider.SetValue(valueSlider.value);
 
-        UpdateColor();
+        SyncFromCurrentColor();
     }
 
     private void OnDisable()
@@ -43,9 +47,25 @@ public class HSVColorPicker : MonoBehaviour
         if (hueSlider != null) hueSlider.OnValueChanged -= HandleValueChanged;
         if (saturationSlider != null) saturationSlider.OnValueChanged -= HandleValueChanged;
         if (valueSlider != null) valueSlider.OnValueChanged -= HandleValueChanged;
+        if (colorManager != null) colorManager.OnColorChanged -= SyncFromColor;
     }
 
     private void HandleValueChanged(float newValue) { UpdateColor(); }
+    private void SyncFromCurrentColor()
+    {
+        if (colorManager != null) SyncFromColor(colorManager.CurrentColor);
+        else UpdateColor();
+    }
+    private void SyncFromColor(Color color)
+    {
+        if (hueSlider == null || saturationSlider == null || valueSlider == null) return;
+        Color.RGBToHSV(color, out float h, out float s, out float v);
+        hueSlider.SetValue(h);
+        saturationSlider.SetValue(s);
+        valueSlider.SetValue(v);
+        UpdateColor();
+        Debug.Log($"[HSV] Synced from color #{ColorUtility.ToHtmlStringRGB(color)}", this);
+    }
 
     [ContextMenu("Test - Update HSV Color")]
     public void UpdateColor()
@@ -63,7 +83,6 @@ public class HSVColorPicker : MonoBehaviour
         SetRendererColor(colorPreview, "_BaseColor", selectedColor);
         SetRendererColor(saturationTrack, saturationColorProperty, pureHue);
         SetRendererColor(valueTrack, valueColorProperty, fullColor);
-
         if (hexText != null) { hexText.text = "#" + ColorUtility.ToHtmlStringRGB(selectedColor); }
     }
 

@@ -8,8 +8,8 @@ public class HSVAddToPalette : MonoBehaviour
     [Header("Add Button")]
     public Collider addButtonCollider;
 
-    [Header("Custom Palette Slots")]
-    public ColorSwatchButton[] customSwatches = new ColorSwatchButton[8];
+    [Header("Custom Palette Pagination")]
+    public CustomPalettePagination pagination;
 
     [Header("Touch Settings")]
     public float touchDistance = 0.015f;
@@ -37,19 +37,13 @@ public class HSVAddToPalette : MonoBehaviour
         if (colorPicker == null || colorPicker.hueSlider == null || colorPicker.saturationSlider == null || colorPicker.valueSlider == null) return;
         Color selectedColor = Color.HSVToRGB(colorPicker.hueSlider.value, colorPicker.saturationSlider.value, colorPicker.valueSlider.value);
 
-        foreach (ColorSwatchButton swatch in customSwatches)
+        if (pagination == null)
         {
-            if (swatch == null) continue;
-            if (!swatch.gameObject.activeSelf)
-            {
-                swatch.SetSwatchColor(selectedColor);
-                swatch.gameObject.SetActive(true);
-
-                Debug.Log("[HSV] Custom color added!");
-                return;
-            }
+            Debug.LogWarning("[HSV] Custom Palette Pagination missing!");
+            return;
         }
 
-        Debug.Log("[HSV] All custom palette slots are full!");
+        pagination.AddColor(selectedColor);
+        Debug.Log("[HSV] Custom color added!");
     }
 }
