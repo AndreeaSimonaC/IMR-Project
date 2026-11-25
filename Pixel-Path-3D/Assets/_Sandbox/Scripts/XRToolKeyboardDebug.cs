@@ -23,6 +23,7 @@ public class XRToolKeyboardDebug : MonoBehaviour
     [SerializeField] private HandToolButton ungroupButton;
     [SerializeField] private HSVAddToPalette hsvAddToPalette;
     [SerializeField] private CustomPalettePagination customPagination;
+    [SerializeField] private ModelingSettings modelingSettings;
 
     [Header("Debug")]
     [SerializeField] private bool logActions = true;
@@ -57,6 +58,8 @@ public class XRToolKeyboardDebug : MonoBehaviour
 
         bool shift = keyboard.leftShiftKey.isPressed || keyboard.rightShiftKey.isPressed;
         if (!shift) return;
+        if (keyboard.f9Key.wasPressedThisFrame && modelingSettings != null) modelingSettings.SetSnapToGrid();
+        if (keyboard.f10Key.wasPressedThisFrame && modelingSettings != null) modelingSettings.SetFreePlacement();
         if (keyboard.fKey.wasPressedThisFrame) { LogAction("Paint Selected", paintTool != null && paintTool.PaintSelected()); }
 
         if (keyboard.pKey.wasPressedThisFrame) { ActivateTool(HandTool.ColorPicker); }
