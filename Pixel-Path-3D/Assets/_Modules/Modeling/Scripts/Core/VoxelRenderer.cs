@@ -52,8 +52,8 @@ public class VoxelRenderer : MonoBehaviour
         objectVisualRoot = root.transform;
         objectVisualRoot.SetParent(voxelRoot, false);
 
-        initialRootPosition = objectVisualRoot.position;
-        initialRootRotation = objectVisualRoot.rotation;
+        initialRootPosition = objectVisualRoot.localPosition;
+        initialRootRotation = objectVisualRoot.localRotation;
         initialRootScale = objectVisualRoot.localScale;
 
         if (voxelObject != null)
@@ -68,7 +68,7 @@ public class VoxelRenderer : MonoBehaviour
         voxelModel.OnVoxelColorChanged += UpdateVoxelColor;
         voxelModel.OnModelCleared += ClearRenderedVoxels;
 
-        foreach (var voxel in voxelModel.Voxels) { RenderVoxel(voxel.Key, voxel.Value);}
+        foreach (var voxel in voxelModel.Voxels) { RenderVoxel(voxel.Key, voxel.Value); }
         RegisterExistingObjects();
     }
 
@@ -311,24 +311,27 @@ public class VoxelRenderer : MonoBehaviour
 
         return false;
     }
+
     private void UpdateDefaultObjectTransform()
     {
         if (voxelObject == null || objectVisualRoot == null) return;
         Vector3 scale = voxelObject.transform.localScale;
-
         if (Mathf.Approximately(initialObjectScale.x, 0f) || Mathf.Approximately(initialObjectScale.y, 0f) || Mathf.Approximately(initialObjectScale.z, 0f)) return;
 
         Vector3 scaleRatio = new Vector3(scale.x / initialObjectScale.x, scale.y / initialObjectScale.y, scale.z / initialObjectScale.z);
 
         Quaternion rotationDelta = voxelObject.transform.rotation * Quaternion.Inverse(initialObjectRotation);
         Vector3 positionDelta = voxelObject.transform.position - initialObjectPosition;
+        Transform parent = objectVisualRoot.parent;
+        Vector3 basePosition = parent.TransformPoint(initialRootPosition);
+        Quaternion baseRotation = parent.rotation * initialRootRotation;
 
         Vector3 pivot = voxelGrid.transform.position;
-        Vector3 offset = initialRootPosition - pivot;
+        Vector3 offset = basePosition - pivot;
         Vector3 scaledOffset = Vector3.Scale(offset, scaleRatio);
 
         objectVisualRoot.position = pivot + positionDelta + rotationDelta * scaledOffset;
-        objectVisualRoot.rotation = rotationDelta * initialRootRotation;
+        objectVisualRoot.rotation = rotationDelta * baseRotation;
         objectVisualRoot.localScale = Vector3.Scale(initialRootScale, scaleRatio);
     }
 }
