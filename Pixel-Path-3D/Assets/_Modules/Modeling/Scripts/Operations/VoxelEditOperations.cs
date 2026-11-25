@@ -8,10 +8,12 @@ public class VoxelEditOperations : MonoBehaviour
     [SerializeField] private VoxelGrid voxelGrid;
     [SerializeField] private SelectionManager selectionManager;
     [SerializeField] private VoxelGroupManager groupManager;
+    [SerializeField] private ModelingSettings modelingSettings;
 
     private const int MaxScaledVoxels = 4096;
 
     private bool Ready => voxelModel != null && voxelGrid != null && selectionManager != null;
+    private bool SnapEnabled => modelingSettings != null && modelingSettings.CurrentMode == PlacementMode.SnapToGrid;
 
     public bool EraseCell(Vector3Int cell)
     {
@@ -24,13 +26,13 @@ public class VoxelEditOperations : MonoBehaviour
 
     public bool EraseSelected()
     {
-        if (!Ready || !selectionManager.HasSelection) return false;
+        if (!Ready || selectionManager.Count == 0) return false;
 
         var cells = new List<Vector3Int>(selectionManager.Selected);
         bool any = false;
         foreach (Vector3Int cell in cells) any |= voxelModel.RemoveVoxel(cell);
 
-        selectionManager.ClearSelection();
+        foreach (Vector3Int cell in cells) selectionManager.RemoveFromSelection(cell);
 
         if (any) Debug.Log($"[VoxelEditOperations] Erased {cells.Count} voxels.");
 
@@ -63,7 +65,7 @@ public class VoxelEditOperations : MonoBehaviour
 
     public bool ScaleSelected(Vector3Int factors)
     {
-        if (!Ready || !selectionManager.HasSelection) return false;
+        if (!Ready || selectionManager.Count == 0) return false;
         if (factors.x < 1 || factors.y < 1 || factors.z < 1 || factors.x > 4 || factors.y > 4 || factors.z > 4) return false;
         if (factors == Vector3Int.one) return false;
         if (!VoxelSelectionMath.TryGetBounds(selectionManager.Selected, out BoundsInt bounds)) return false;
@@ -114,9 +116,9 @@ public class VoxelEditOperations : MonoBehaviour
 
     private bool TryTransform(Func<Vector3Int, Vector3Int> map, bool duplicate)
     {
-        if (!Ready || !selectionManager.HasSelection)
+        if (!Ready || selectionManager.Count == 0)
         {
-            Debug.LogWarning($"[TRANSFORM DEBUG] Ready={Ready} | HasSelection={selectionManager != null && selectionManager.HasSelection}");
+            Debug.LogWarning($"[TRANSFORM DEBUG] Ready={Ready} | " + $"SelectedCells=" + $"{(selectionManager != null ? selectionManager.Count : 0)}");
             return false;
         }
 
@@ -182,5 +184,104 @@ public class VoxelEditOperations : MonoBehaviour
         foreach (var entry in destination) voxelModel.AddVoxel(entry.Key, entry.Value);
         if (groupManager != null && capturedGroups != null) groupManager.RestoreGroups(capturedGroups, destinationsBySource);
         selectionManager.ReplaceSelection(destination.Keys);
+    }
+    private List<VoxelObject> GetSelectedObjects()
+    {
+        var result = new List<VoxelObject>();
+        if (selectionManager == null) return result;
+        foreach (VoxelObject obj in selectionManager.SelectedObjects) { if (obj != null) result.Add(obj); }
+
+        return result;
+    }
+
+    private Vector3 GetObjectPivot(List<VoxelObject> objects)
+    {
+        Vector3 center = Vector3.zero;
+        foreach (VoxelObject obj in objects) center += obj.transform.position;
+        return center / objects.Count;
+    }
+
+    public bool MoveSelectedObjects(Vector3 worldDelta)
+    {
+        if (!Ready || selectionManager.ObjectSelectionCount == 0) return false;
+        List<VoxelObject> objects = GetSelectedObjects();
+        if (objects.Count == 0) return false;
+        if (worldDelta.sqrMagnitude < 0.00000001f) return false;
+        bool changed = false;
+
+        if (SnapEnabled)
+        {
+            float size = voxelGrid.VoxelSize;
+            if (size <= 0f) return false;
+            Vector3 gridOrigin = voxelGrid.VoxelToWorld(Vector3Int.zero);
+
+            foreach (VoxelObject obj in objects)
+            {
+                Vector3 targetWorld = obj.transform.position + worldDelta;
+                Vector3 localPosition = voxelGrid.transform.InverseTransformVector(targetWorld - gridOrigin);
+                Vector3 snappedLocal = new Vector3(Mathf.Round(localPosition.x / size) * size, Mathf.Round(localPosition.y / size) * size, Mathf.Round(localPosition.z / size) * size);
+                Vector3 snappedWorld = gridOrigin + voxelGrid.transform.TransformVector(snappedLocal);
+
+                if ((snappedWorld - obj.transform.position).sqrMagnitude < 0.00000001f) continue;
+
+                obj.transform.position = snappedWorld;
+                changed = true;
+            }
+
+            return changed;
+        }
+        foreach (VoxelObject obj in objects) { obj.transform.position += worldDelta; changed = true; }
+        return changed;
+    }
+
+    public bool RotateSelectedObjects(Vector3 worldAxis, float degrees)
+    {
+        if (!Ready || selectionManager.ObjectSelectionCount == 0) return false;
+        if (worldAxis.sqrMagnitude < 0.000001f) return false;
+        if (SnapEnabled) degrees = Mathf.Round(degrees / 90f) * 90f;
+        if (Mathf.Abs(degrees) < 0.0001f) return false;
+
+        List<VoxelObject> objects = GetSelectedObjects();
+
+        if (objects.Count == 0) return false;
+
+        Vector3 pivot = GetObjectPivot(objects);
+        Quaternion rotation = Quaternion.AngleAxis(degrees, worldAxis.normalized);
+
+        foreach (VoxelObject obj in objects)
+        {
+            Vector3 relativePosition = obj.transform.position - pivot;
+            obj.transform.position = pivot + rotation * relativePosition;
+            obj.transform.rotation = rotation * obj.transform.rotation;
+        }
+
+        return true;
+    }
+
+    public bool ScaleSelectedObjects(Vector3 scaleFactors)
+    {
+        if (!Ready || selectionManager.ObjectSelectionCount == 0) return false;
+        if (scaleFactors.x <= 0f || scaleFactors.y <= 0f || scaleFactors.z <= 0f) return false;
+        if (SnapEnabled) { scaleFactors = new Vector3(Mathf.Max(0.25f, Mathf.Round(scaleFactors.x * 4f) / 4f), Mathf.Max(0.25f, Mathf.Round(scaleFactors.y * 4f) / 4f), Mathf.Max(0.25f, Mathf.Round(scaleFactors.z * 4f) / 4f)); }
+        if (Vector3.Distance(scaleFactors, Vector3.one) < 0.0001f) return false;
+
+        List<VoxelObject> objects = GetSelectedObjects();
+
+        if (objects.Count == 0) return false;
+
+        Vector3 pivot = GetObjectPivot(objects);
+
+        foreach (VoxelObject obj in objects)
+        {
+            Vector3 current = obj.transform.localScale;
+            Vector3 newScale = new Vector3(current.x * scaleFactors.x, current.y * scaleFactors.y, current.z * scaleFactors.z);
+            Vector3 relativePosition = obj.transform.position - pivot;
+            Vector3 newRelativePosition = new Vector3(relativePosition.x * scaleFactors.x, relativePosition.y * scaleFactors.y, relativePosition.z * scaleFactors.z);
+
+            obj.transform.localScale = newScale;
+            obj.transform.position = pivot + newRelativePosition;
+        }
+
+        return true;
     }
 }

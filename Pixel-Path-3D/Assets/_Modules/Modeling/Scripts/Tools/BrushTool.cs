@@ -10,14 +10,18 @@ public class BrushTool : MonoBehaviour
     [SerializeField] private Transform voxelRoot;
     [SerializeField] private GameObject previewPrefab;
     [SerializeField] private ColorPaletteManager colorManager;
+    [SerializeField] private ModelingSettings modelingSettings;
+    [SerializeField] private VoxelObjectManager objectManager;
 
     [Header("Brush Settings")]
     [SerializeField] private Color brushColor = Color.white;
 
     private GameObject preview;
     private Vector3Int targetCell;
+    private Vector3 freeTargetWorld;
     private bool hasValidTarget;
     private bool isInitialized;
+    private bool IsFreeMode => modelingSettings != null && modelingSettings.CurrentMode == PlacementMode.Free;
 
     private void Awake()
     {
@@ -47,9 +51,18 @@ public class BrushTool : MonoBehaviour
         Debug.Log("BrushTool: Initialized successfully.", this);
     }
 
-    private void OnEnable() { if (toolManager != null) toolManager.OnToolChanged += HandleToolChanged; }
+    private void OnEnable()
+    {
+        if (toolManager != null) toolManager.OnToolChanged += HandleToolChanged;
+        if (modelingSettings != null) modelingSettings.OnPlacementModeChanged += HandlePlacementModeChanged;
+    }
 
-    private void OnDisable() { if (toolManager != null) toolManager.OnToolChanged -= HandleToolChanged; ClearTarget(); }
+    private void OnDisable()
+    {
+        if (toolManager != null) toolManager.OnToolChanged -= HandleToolChanged;
+        if (modelingSettings != null) modelingSettings.OnPlacementModeChanged -= HandlePlacementModeChanged;
+        ClearTarget();
+    }
 
     private void HandleToolChanged(HandTool tool)
     {
@@ -70,8 +83,18 @@ public class BrushTool : MonoBehaviour
         {
             if (Vector3.Dot(hit.normal, voxelGrid.transform.up) < 0.9f) { ClearTarget(); return; }
 
-            Vector3 targetPoint = hit.point + voxelGrid.transform.up * voxelGrid.VoxelSize * 0.02f;
-            SetPreviewTarget(voxelGrid.WorldToVoxel(targetPoint));
+            if (IsFreeMode) { SetFreePreviewTarget(hit.point + hit.normal * voxelGrid.VoxelSize * 0.5f); }
+            else
+            {
+                Vector3 targetPoint = hit.point + voxelGrid.transform.up * voxelGrid.VoxelSize * 0.02f;
+                SetPreviewTarget(voxelGrid.WorldToVoxel(targetPoint));
+            }
+            return;
+        }
+
+        if (IsFreeMode)
+        {
+            SetFreePreviewTarget(hit.point + hit.normal * voxelGrid.VoxelSize * 0.5f);
             return;
         }
 
@@ -89,7 +112,8 @@ public class BrushTool : MonoBehaviour
     public void UpdateFreeTarget(Vector3Int cell)
     {
         if (!CanUseBrush()) return;
-        SetPreviewTarget(cell);
+        if (IsFreeMode) SetFreePreviewTarget(voxelGrid.VoxelToWorld(cell));
+        else SetPreviewTarget(cell);
     }
 
     private void SetPreviewTarget(Vector3Int cell)
@@ -130,10 +154,31 @@ public class BrushTool : MonoBehaviour
     {
         if (!CanUseBrush()) return;
         if (!hasValidTarget) { Debug.Log("BrushTool: No valid target.", this); return; }
+
+        Color color = colorManager != null ? colorManager.CurrentColor : brushColor;
+
+        if (IsFreeMode)
+        {
+            if (objectManager == null) { Debug.LogError("BrushTool: VoxelObjectManager is not assigned!", this); return; }
+
+            VoxelObject newObject = objectManager.CreateObject("FreeVoxel", freeTargetWorld);
+
+            if (newObject == null || newObject.Model == null) { Debug.LogError("BrushTool: Failed to create free voxel object.", this); return; }
+            if (!newObject.Model.AddVoxel(Vector3Int.zero, color))
+            {
+                objectManager.UnregisterObject(newObject);
+                Destroy(newObject.gameObject);
+                Debug.LogWarning("BrushTool: Failed to add voxel to new object.", this);
+                return;
+            }
+            Debug.Log($"BRUSH FREE: Placed voxel at {freeTargetWorld} | " + $"Color: {color}", this);
+            ClearTarget();
+            return;
+        }
+
         if (!voxelGrid.IsInsideGrid(targetCell)) { Debug.LogWarning($"BrushTool: Outside grid {targetCell}", this); ClearTarget(); return; }
         if (voxelModel.HasVoxel(targetCell)) { Debug.LogWarning($"BrushTool: Cell occupied {targetCell}", this); ClearTarget(); return; }
 
-        Color color = colorManager != null ? colorManager.CurrentColor : brushColor;
         bool placed = voxelModel.AddVoxel(targetCell, color);
 
         if (placed) { Debug.Log($"BRUSH: Placed voxel at {targetCell} | Color: {color}", this); ClearTarget(); }
@@ -144,7 +189,7 @@ public class BrushTool : MonoBehaviour
     {
         if (!CanUseBrush()) return;
         if (!voxelGrid.IsInsideGrid(cell)) return;
-        if (voxelModel.HasVoxel(cell)) return;
+        if (!IsFreeMode && voxelModel.HasVoxel(cell)) return;
 
         UpdateFreeTarget(cell);
         PlaceVoxel();
@@ -157,4 +202,25 @@ public class BrushTool : MonoBehaviour
     }
 
     private void OnDestroy() { if (preview != null) Destroy(preview); }
+    private void HandlePlacementModeChanged(PlacementMode mode) { ClearTarget(); }
+    public void UpdateFreeTarget(Vector3 worldPosition)
+    {
+        if (!CanUseBrush()) return;
+        if (IsFreeMode) SetFreePreviewTarget(worldPosition);
+        else SetPreviewTarget(voxelGrid.WorldToVoxel(worldPosition));
+    }
+    private void SetFreePreviewTarget(Vector3 worldPosition)
+    {
+        Vector3Int gridCell = voxelGrid.WorldToVoxel(worldPosition);
+
+        if (!voxelGrid.IsInsideGrid(gridCell)) { ClearTarget(); return; }
+
+        freeTargetWorld = worldPosition;
+        hasValidTarget = true;
+
+        preview.transform.localPosition = voxelGrid.transform.InverseTransformPoint(worldPosition);
+        preview.transform.localRotation = Quaternion.identity;
+        preview.transform.localScale = Vector3.one * voxelGrid.VoxelSize;
+        if (!preview.activeSelf) preview.SetActive(true);
+    }
 }

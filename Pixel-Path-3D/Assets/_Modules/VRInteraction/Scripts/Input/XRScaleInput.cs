@@ -8,6 +8,8 @@ public class XRScaleInput : MonoBehaviour
     [SerializeField] private XRTwoHandManipulation manipulation;
     [SerializeField] private ToolManager toolManager;
     [SerializeField] private ScaleTool scaleTool;
+    [SerializeField] private SelectionManager selectionManager;
+    [SerializeField] private ModelingSettings modelingSettings;
 
     [Header("Scaling")]
     [SerializeField, Min(1.01f)] private float scaleThreshold = 1.5f;
@@ -18,6 +20,8 @@ public class XRScaleInput : MonoBehaviour
     private bool interactionBlocked;
     private bool wasAvailable;
     private bool scaledThisGesture;
+    private bool freeScaling;
+    private float appliedScaleFactor = 1f;
 
     private void Start()
     {
@@ -41,7 +45,7 @@ public class XRScaleInput : MonoBehaviour
             if (wasAvailable) coordinator.RequireFreshPinch();
 
             wasAvailable = false;
-            scaledThisGesture = false;
+            ResetScaling();
             return;
         }
 
@@ -49,16 +53,24 @@ public class XRScaleInput : MonoBehaviour
 
         if (!manipulation.IsManipulating)
         {
-            scaledThisGesture = false;
+            ResetScaling();
             return;
         }
 
         if (manipulation.StartedThisFrame)
-            scaledThisGesture = false;
+        {
+            ResetScaling();
+            freeScaling = modelingSettings != null && modelingSettings.CurrentMode == PlacementMode.Free && selectionManager != null && selectionManager.ObjectSelectionCount > 0 && selectionManager.Count == 0;
+        }
+
+        if (freeScaling)
+        {
+            UpdateFreeScaling();
+            return;
+        }
 
         if (scaledThisGesture) return;
         if (manipulation.ScaleFactor < scaleThreshold) return;
-
         if (scaleTool.ScaleUniform2())
         {
             scaledThisGesture = true;
@@ -69,11 +81,7 @@ public class XRScaleInput : MonoBehaviour
     private bool IsMenuOpen()
     {
         if (expandedMenus == null) return false;
-
-        foreach (GameObject menu in expandedMenus)
-        {
-            if (menu != null && menu.activeInHierarchy) return true;
-        }
+        foreach (GameObject menu in expandedMenus) { if (menu != null && menu.activeInHierarchy) return true; }
 
         return false;
     }
@@ -84,13 +92,30 @@ public class XRScaleInput : MonoBehaviour
 
         interactionBlocked = blocked;
         coordinator?.RequireFreshPinch();
-        scaledThisGesture = false;
+        ResetScaling();
     }
 
     private void OnDisable()
     {
         wasAvailable = false;
-        scaledThisGesture = false;
+        ResetScaling();
         coordinator?.RequireFreshPinch();
+    }
+    private void UpdateFreeScaling()
+    {
+        float currentFactor = manipulation.ScaleFactor;
+
+        if (currentFactor <= 0f || appliedScaleFactor <= 0f) { return; }
+        float incrementalFactor = currentFactor / appliedScaleFactor;
+        if (Mathf.Abs(incrementalFactor - 1f) < 0.0001f) return;
+        Vector3 factors = Vector3.one * incrementalFactor;
+        if (scaleTool.ScaleObjectsBy(factors)) appliedScaleFactor = currentFactor;
+    }
+
+    private void ResetScaling()
+    {
+        scaledThisGesture = false;
+        freeScaling = false;
+        appliedScaleFactor = 1f;
     }
 }

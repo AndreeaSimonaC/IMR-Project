@@ -21,6 +21,7 @@ public class ScaleTool : MonoBehaviour
         {
             return false;
         }
+        if (selectionManager.ObjectSelectionCount > 0) { return ScaleObjectsBy(new Vector3(factors.x, factors.y, factors.z)); }
 
         bool scaled = editOperations.ScaleSelected(factors);
 
@@ -33,4 +34,12 @@ public class ScaleTool : MonoBehaviour
     public bool ScaleY2() => ScaleBy(new Vector3Int(1, 2, 1));
     public bool ScaleZ2() => ScaleBy(new Vector3Int(1, 1, 2));
     public bool ScaleUniform2() => ScaleBy(new Vector3Int(2, 2, 2));
+    public bool ScaleObjectsBy(Vector3 factors)
+    {
+        if (!CanUseScale() || selectionManager.ObjectSelectionCount == 0) return false;
+        bool scaled = editOperations.ScaleSelectedObjects(factors);
+        if (scaled) { Debug.Log($"[ScaleTool] Scaled " + $"{selectionManager.ObjectSelectionCount} object(s).", this); }
+
+        return scaled;
+    }
 }

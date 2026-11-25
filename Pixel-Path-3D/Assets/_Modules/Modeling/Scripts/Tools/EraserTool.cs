@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class EraserTool : MonoBehaviour
@@ -8,10 +9,15 @@ public class EraserTool : MonoBehaviour
     [SerializeField] private VoxelEditOperations editOperations;
     [SerializeField] private Transform voxelRoot;
     [SerializeField] private SelectionManager selectionManager;
+    [SerializeField] private VoxelRenderer voxelRenderer;
+    [SerializeField] private VoxelObjectManager objectManager;
+    [SerializeField] private VoxelGroupManager groupManager;
     private Vector3Int targetCell;
+    private VoxelObject targetObject;
     private bool hasTarget;
-    public bool HasTarget => hasTarget;
+    public bool HasTarget => hasTarget || targetObject != null;
     public Vector3Int TargetCell => targetCell;
+    public VoxelObject TargetObject => targetObject;
 
     private bool CanUseEraser()
     {
@@ -23,6 +29,11 @@ public class EraserTool : MonoBehaviour
         ClearTarget();
 
         if (!CanUseEraser() || voxelRoot == null || hit.collider == null || !hit.collider.transform.IsChildOf(voxelRoot)) { return; }
+        if (voxelRenderer != null && voxelRenderer.TryGetObject(hit.collider.transform, out VoxelObject voxelObject) && voxelObject != null && voxelObject.Model != voxelModel)
+        {
+            targetObject = voxelObject;
+            return;
+        }
 
         Vector3 inward = hit.point - hit.normal * voxelGrid.VoxelSize * 0.02f;
         Vector3Int cell = voxelGrid.WorldToVoxel(inward);
@@ -43,7 +54,15 @@ public class EraserTool : MonoBehaviour
 
     public bool EraseTarget()
     {
-        if (!CanUseEraser() || !hasTarget) return false;
+        if (!CanUseEraser() || !HasTarget) return false;
+        if (targetObject != null)
+        {
+            VoxelObject obj = targetObject;
+            ClearTarget();
+            if (selectionManager != null && selectionManager.IsSelected(obj)) { return EraseSelection(); }
+
+            return EraseObject(obj);
+        }
 
         Vector3Int cell = targetCell;
         ClearTarget();
@@ -51,7 +70,7 @@ public class EraserTool : MonoBehaviour
         if (selectionManager != null && selectionManager.IsSelected(cell))
         {
             Debug.Log("[EraserTool] Erasing selected voxel group.");
-            return editOperations.EraseSelected();
+            return EraseSelection();
         }
 
         return editOperations.EraseCell(cell);
@@ -60,11 +79,34 @@ public class EraserTool : MonoBehaviour
 
     public bool EraseSelection()
     {
-        if (!CanUseEraser()) return false;
-        return editOperations.EraseSelected();
+        if (!CanUseEraser() || selectionManager == null) return false;
+        bool erased = false;
+        var selectedObjects = new List<VoxelObject>(selectionManager.SelectedObjects);
+        foreach (VoxelObject obj in selectedObjects) erased |= EraseObject(obj);
+        if (selectionManager.Selected.Count > 0) erased |= editOperations.EraseSelected();
+
+        return erased;
     }
 
-    public void ClearTarget() { hasTarget = false; }
+    public void ClearTarget() { hasTarget = false; targetObject = null; }
 
     private void OnDisable() { ClearTarget(); }
+    public void UpdateObjectTarget(VoxelObject obj)
+    {
+        ClearTarget();
+        if (!CanUseEraser() || obj == null) return;
+        targetObject = obj;
+    }
+
+    private bool EraseObject(VoxelObject obj)
+    {
+        if (obj == null || objectManager == null) return false;
+        bool removed = objectManager.UnregisterObject(obj);
+        if (!removed) return false;
+        if (groupManager != null) groupManager.RemoveObjectFromGroup(obj);
+        if (selectionManager != null) selectionManager.RemoveFromSelection(obj);
+        Debug.Log($"[EraserTool] Removed object {obj.name}.", this);
+        Destroy(obj.gameObject);
+        return true;
+    }
 }

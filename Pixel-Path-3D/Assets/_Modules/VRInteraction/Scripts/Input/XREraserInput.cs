@@ -8,6 +8,7 @@ public class XREraserInput : MonoBehaviour
     [SerializeField] private ToolManager toolManager;
     [SerializeField] private EraserTool eraserTool;
     [SerializeField] private VoxelGrid voxelGrid;
+    [SerializeField] private VoxelRenderer voxelRenderer;
 
     [Header("Raycast")]
     [SerializeField] private Transform rayOrigin;
@@ -19,10 +20,12 @@ public class XREraserInput : MonoBehaviour
 
     [Header("Menu Blocking")]
     [SerializeField] private GameObject[] expandedMenus;
+    [SerializeField] private VoxelModel defaultVoxelModel;
 
     private bool interactionBlocked;
     private bool wasAvailable;
     private bool strokeActive;
+    private bool erasedFreeThisPinch;
     private Vector3Int lastStrokeCell;
 
     private void Start()
@@ -57,13 +60,15 @@ public class XREraserInput : MonoBehaviour
 
         if (directErasing)
         {
+            if (!hand.IsPinching) ResetStroke();
+            if (TryEraseFreeObject(hand.IndexTipPosition, hand.IsPinching)) { ResetCellStroke(); return; }
             Vector3Int cell = voxelGrid.WorldToVoxel(hand.IndexTipPosition);
             bool inside = voxelGrid.IsInsideGrid(cell);
 
             if (inside) eraserTool.UpdateCellTarget(cell);
             else eraserTool.ClearTarget();
 
-            if (!hand.IsPinching || !inside) { ResetStroke(); return; }
+            if (!hand.IsPinching || !inside) { ResetCellStroke(); return; }
 
             if (!strokeActive)
             {
@@ -138,7 +143,7 @@ public class XREraserInput : MonoBehaviour
         eraserTool?.ClearTarget();
     }
 
-    private void ResetStroke() { strokeActive = false; }
+    private void ResetStroke() { strokeActive = false; erasedFreeThisPinch = false; }
 
     private void OnDisable()
     {
@@ -147,4 +152,35 @@ public class XREraserInput : MonoBehaviour
         eraserTool?.ClearTarget();
         ResetStroke();
     }
+
+    private bool TryEraseFreeObject(Vector3 fingerPosition, bool isPinching)
+    {
+        if (voxelRenderer == null) return false;
+
+        Collider[] hits = Physics.OverlapSphere(fingerPosition, voxelGrid.VoxelSize * 0.45f, targetLayers, QueryTriggerInteraction.Ignore);
+        VoxelObject closestObject = null;
+        float closestDistance = float.PositiveInfinity;
+
+        foreach (Collider hit in hits)
+        {
+            if (!voxelRenderer.TryGetObject(hit.transform, out VoxelObject obj)) continue;
+            if (obj == null || obj.Model == null) continue;
+            if (obj.Model == defaultVoxelModel) continue;
+
+            float distance = (hit.ClosestPoint(fingerPosition) - fingerPosition).sqrMagnitude;
+
+            if (distance < closestDistance) { closestDistance = distance; closestObject = obj; }
+        }
+
+        if (closestObject == null) return false;
+
+        if (isPinching && !erasedFreeThisPinch)
+        {
+            eraserTool.UpdateObjectTarget(closestObject);
+            if (eraserTool.EraseTarget()) erasedFreeThisPinch = true;
+        }
+
+        return true;
+    }
+    private void ResetCellStroke() { strokeActive = false; }
 }

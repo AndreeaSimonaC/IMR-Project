@@ -2,11 +2,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 
+[DefaultExecutionOrder(100)]
 public class SelectionHighlight : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private SelectionManager selectionManager;
     [SerializeField] private VoxelGrid voxelGrid;
+    [SerializeField] private VoxelRenderer voxelRenderer;
 
     [Header("Appearance")]
     [SerializeField] private Color highlightColor = new Color(0.86f, 0.17f, 0.57f, 1f);
@@ -19,6 +21,13 @@ public class SelectionHighlight : MonoBehaviour
 
     private Material highlightMaterial;
     private Transform highlightRoot;
+    private readonly Dictionary<VoxelObject, ObjectOutline> objectOutlines = new();
+    private class ObjectOutline
+    {
+        public Transform Root;
+        public LineRenderer[] Lines;
+        public readonly Vector3[] Corners = new Vector3[8];
+    }
 
     private static readonly int[,] Edges =
     {
@@ -72,9 +81,12 @@ public class SelectionHighlight : MonoBehaviour
 
         ClearHighlight();
 
+        // -------- EXISTING SNAP HIGHLIGHT --------
+
         var selected = new HashSet<Vector3Int>(selectionManager.Selected);
         var drawnEdges = new HashSet<(Vector3Int, Vector3Int)>();
         foreach (Vector3Int cell in selected) CreateVoxelOutline(cell, selected, drawnEdges);
+        foreach (VoxelObject voxelObject in selectionManager.SelectedObjects) CreateObjectOutline(voxelObject);
     }
 
     private void CreateVoxelOutline(Vector3Int cell, HashSet<Vector3Int> selected, HashSet<(Vector3Int, Vector3Int)> drawnEdges)
@@ -184,6 +196,7 @@ public class SelectionHighlight : MonoBehaviour
     private void ClearHighlight()
     {
         if (highlightRoot == null) return;
+        objectOutlines.Clear();
 
         for (int i = highlightRoot.childCount - 1; i >= 0; i--)
         {
@@ -204,5 +217,121 @@ public class SelectionHighlight : MonoBehaviour
     {
         if (highlightRoot != null) Destroy(highlightRoot.gameObject);
         if (highlightMaterial != null) Destroy(highlightMaterial);
+    }
+    private void LateUpdate()
+    {
+        foreach (var entry in objectOutlines)
+        {
+            if (entry.Value.Root != null) UpdateObjectOutline(entry.Key, entry.Value);
+        }
+    }
+    private void CreateObjectOutline(VoxelObject voxelObject)
+    {
+        if (voxelObject == null || voxelObject.Model == null || voxelObject.Model.VoxelCount == 0) return;
+        GameObject root = new GameObject($"ObjectSelection_{voxelObject.name}");
+        root.transform.SetParent(highlightRoot, false);
+        ObjectOutline outline = new ObjectOutline { Root = root.transform, Lines = new LineRenderer[12] };
+
+        for (int i = 0; i < Edges.GetLength(0); i++)
+        {
+            GameObject edge = new GameObject($"ObjectEdge_{i}");
+            edge.transform.SetParent(root.transform, false);
+            edge.layer = 2;
+
+            LineRenderer line = edge.AddComponent<LineRenderer>();
+
+            line.sharedMaterial = highlightMaterial;
+            line.useWorldSpace = true;
+            line.positionCount = 2;
+
+            float width = voxelGrid.VoxelSize * lineThickness;
+
+            line.startWidth = width;
+            line.endWidth = width;
+
+            line.startColor = highlightColor;
+            line.endColor = highlightColor;
+
+            line.shadowCastingMode = ShadowCastingMode.Off;
+            line.receiveShadows = false;
+
+            outline.Lines[i] = line;
+        }
+
+        objectOutlines.Add(voxelObject, outline);
+        UpdateObjectOutline(voxelObject, outline);
+    }
+
+    private bool TryGetLocalObjectBounds(VoxelModel model, out Vector3 center, out Vector3 halfSize)
+    {
+        center = Vector3.zero;
+        halfSize = Vector3.zero;
+
+        if (model == null || model.VoxelCount == 0) return false;
+
+        bool hasBounds = false;
+        Vector3Int min = Vector3Int.zero;
+        Vector3Int max = Vector3Int.zero;
+
+        foreach (Vector3Int cell in model.Voxels.Keys)
+        {
+            if (!hasBounds) { min = cell; max = cell; hasBounds = true; }
+            else
+            {
+                min = Vector3Int.Min(min, cell);
+                max = Vector3Int.Max(max, cell);
+            }
+        }
+
+        if (!hasBounds) return false;
+
+        Vector3 originWorld = voxelGrid.VoxelToWorld(Vector3Int.zero);
+        Vector3 minLocal = voxelGrid.transform.InverseTransformVector(voxelGrid.VoxelToWorld(min) - originWorld);
+        Vector3 maxLocal = voxelGrid.transform.InverseTransformVector(voxelGrid.VoxelToWorld(max) - originWorld);
+
+        center = (minLocal + maxLocal) * 0.5f;
+        halfSize = new Vector3(Mathf.Abs(maxLocal.x - minLocal.x) + voxelGrid.VoxelSize, Mathf.Abs(maxLocal.y - minLocal.y) + voxelGrid.VoxelSize, Mathf.Abs(maxLocal.z - minLocal.z) + voxelGrid.VoxelSize) * (outlineSize * 0.5f);
+
+        return true;
+    }
+
+    private void UpdateObjectOutline(VoxelObject voxelObject, ObjectOutline outline)
+    {
+        if (voxelObject == null || voxelObject.Model == null || voxelRenderer == null ||
+            !voxelRenderer.TryGetObjectVisualRoot(voxelObject, out Transform visualRoot) ||
+            !TryGetLocalObjectBounds(voxelObject.Model, out Vector3 center, out Vector3 halfSize))
+        {
+            if (outline.Root.gameObject.activeSelf) outline.Root.gameObject.SetActive(false);
+            return;
+        }
+
+        if (!outline.Root.gameObject.activeSelf) outline.Root.gameObject.SetActive(true);
+
+        Vector3[] offsets =
+        {
+            new Vector3(-halfSize.x, -halfSize.y, -halfSize.z),
+            new Vector3( halfSize.x, -halfSize.y, -halfSize.z),
+            new Vector3( halfSize.x, -halfSize.y,  halfSize.z),
+            new Vector3(-halfSize.x, -halfSize.y,  halfSize.z),
+
+            new Vector3(-halfSize.x,  halfSize.y, -halfSize.z),
+            new Vector3( halfSize.x,  halfSize.y, -halfSize.z),
+            new Vector3( halfSize.x,  halfSize.y,  halfSize.z),
+            new Vector3(-halfSize.x,  halfSize.y,  halfSize.z)
+        };
+
+        for (int i = 0; i < offsets.Length; i++)
+        {
+            outline.Corners[i] = visualRoot.TransformPoint(center + offsets[i]);
+        }
+
+        for (int i = 0; i < Edges.GetLength(0); i++)
+        {
+            int a = Edges[i, 0];
+            int b = Edges[i, 1];
+
+            outline.Lines[i].SetPosition(0, outline.Corners[a]);
+            outline.Lines[i].SetPosition(1, outline.Corners[b]);
+        }
     }
 }

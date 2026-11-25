@@ -16,7 +16,7 @@ public class UngroupTool : MonoBehaviour
 
         if (!selectionManager.HasSelection)
         {
-            Debug.Log("[UngroupTool] No voxels selected.", this);
+            Debug.Log("[UngroupTool] Nothing selected.", this);
             return false;
         }
 
@@ -26,6 +26,13 @@ public class UngroupTool : MonoBehaviour
         {
             if (!groupManager.TryGetGroupId(cell, out _)) continue;
             if (groupManager.Ungroup(cell)) removedGroups++;
+        }
+
+        foreach (VoxelObject obj in selectionManager.SelectedObjects)
+        {
+            if (obj == null) continue;
+            if (!groupManager.TryGetObjectGroupId(obj, out _)) continue;
+            if (groupManager.UngroupObject(obj)) removedGroups++;
         }
 
         if (removedGroups > 0) Debug.Log($"[UngroupTool] Removed {removedGroups} group(s).", this);

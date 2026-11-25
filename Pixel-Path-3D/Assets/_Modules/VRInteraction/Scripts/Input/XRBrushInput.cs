@@ -9,6 +9,7 @@ public class XRBrushInput : MonoBehaviour
     [SerializeField] private ToolManager toolManager;
     [SerializeField] private BrushTool brushTool;
     [SerializeField] private VoxelGrid voxelGrid;
+    [SerializeField] private ModelingSettings modelingSettings;
 
     [Header("Right Hand")]
     [SerializeField] private Transform rayOrigin;
@@ -43,6 +44,7 @@ public class XRBrushInput : MonoBehaviour
     private bool strokeReady;
     private bool strokeActive;
     private Vector3Int lastStrokeCell;
+    private bool IsFreeMode => modelingSettings != null && modelingSettings.CurrentMode == PlacementMode.Free;
 
     private void Start()
     {
@@ -73,7 +75,8 @@ public class XRBrushInput : MonoBehaviour
 
         if (!voxelGrid.IsInsideGrid(cell)) { brushTool.ClearTarget(); return; }
 
-        brushTool.UpdateFreeTarget(cell);
+        if (IsFreeMode) brushTool.UpdateFreeTarget(brushPosition);
+        else brushTool.UpdateFreeTarget(cell);
     }
 
     private void PaintBetween(Vector3Int from, Vector3Int to)
@@ -121,7 +124,8 @@ public class XRBrushInput : MonoBehaviour
         {
             UpdateDirectTarget();
 
-            if (isPinching && strokeReady)
+            if (IsFreeMode) { if (pinchStarted && strokeReady) brushTool.PlaceVoxel(); }
+            else if (isPinching && strokeReady)
             {
                 Vector3Int cell = voxelGrid.WorldToVoxel(indexTip.position);
 
@@ -180,8 +184,8 @@ public class XRBrushInput : MonoBehaviour
         if (plane.Raycast(ray, out float distance) && distance >= 0f && distance <= maxDistance)
         {
             Vector3 point = ray.GetPoint(distance);
-            Vector3Int cell = voxelGrid.WorldToVoxel(point);
-            brushTool.UpdateFreeTarget(cell);
+            if (IsFreeMode) brushTool.UpdateFreeTarget(point);
+            else brushTool.UpdateFreeTarget(voxelGrid.WorldToVoxel(point));
         }
         else { brushTool.ClearTarget(); }
     }

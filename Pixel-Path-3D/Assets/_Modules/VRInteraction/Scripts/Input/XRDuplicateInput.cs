@@ -8,6 +8,8 @@ public class XRDuplicateInput : MonoBehaviour
     [SerializeField] private ToolManager toolManager;
     [SerializeField] private DuplicateTool duplicateTool;
     [SerializeField] private VoxelGrid voxelGrid;
+    [SerializeField] private SelectionManager selectionManager;
+    [SerializeField] private ModelingSettings modelingSettings;
 
     [Header("Menu Blocking")]
     [SerializeField] private GameObject[] expandedMenus;
@@ -17,6 +19,8 @@ public class XRDuplicateInput : MonoBehaviour
     private bool hasStartPosition;
     private Vector3 startHandPosition;
     private Vector3Int targetDelta;
+    private Vector3 targetWorldDelta;
+    private bool IsFreeObjectSelection => modelingSettings != null && modelingSettings.CurrentMode == PlacementMode.Free && selectionManager != null && selectionManager.ObjectSelectionCount > 0 && selectionManager.Count == 0;
 
     private void Start()
     {
@@ -55,23 +59,25 @@ public class XRDuplicateInput : MonoBehaviour
             return;
         }
 
-        Vector3 worldDelta = hand.PinchPosition - startHandPosition;
-        Vector3 localDelta = voxelGrid.transform.InverseTransformVector(worldDelta) / voxelGrid.VoxelSize;
+        targetWorldDelta = hand.PinchPosition - startHandPosition;
+        Vector3 localDelta = voxelGrid.transform.InverseTransformVector(targetWorldDelta) / voxelGrid.VoxelSize;
 
         targetDelta = Vector3Int.RoundToInt(localDelta);
 
-        if (hand.PinchStarted && targetDelta != Vector3Int.zero)
+        if (!hand.PinchStarted) return;
+        bool duplicated;
+        if (IsFreeObjectSelection) { duplicated = targetWorldDelta.sqrMagnitude > 0.00000001f && duplicateTool.DuplicateObjectsBy(targetWorldDelta); }
+        else { duplicated = targetDelta != Vector3Int.zero && duplicateTool.DuplicateBy(targetDelta); }
+
+        if (duplicated)
         {
-            if (duplicateTool.DuplicateBy(targetDelta))
-            {
-                Debug.Log($"[XRDuplicateInput] Confirmed delta {targetDelta}", this);
-                ResetTarget();
-                coordinator.RequireFreshPinch();
-            }
+            Debug.Log("[XRDuplicateInput] Duplication confirmed.", this);
+            ResetTarget();
+            coordinator.RequireFreshPinch();
         }
     }
 
-    private void ResetTarget() { hasStartPosition = false; targetDelta = Vector3Int.zero; }
+    private void ResetTarget() { hasStartPosition = false; targetDelta = Vector3Int.zero; targetWorldDelta = Vector3.zero; }
 
     private bool IsMenuOpen()
     {
