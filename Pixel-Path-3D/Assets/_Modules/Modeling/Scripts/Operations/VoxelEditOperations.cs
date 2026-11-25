@@ -7,6 +7,7 @@ public class VoxelEditOperations : MonoBehaviour
     [SerializeField] private VoxelModel voxelModel;
     [SerializeField] private VoxelGrid voxelGrid;
     [SerializeField] private SelectionManager selectionManager;
+    [SerializeField] private VoxelGroupManager groupManager;
 
     private const int MaxScaledVoxels = 4096;
 
@@ -80,9 +81,10 @@ public class VoxelEditOperations : MonoBehaviour
         if (requested > MaxScaledVoxels) return false;
 
         var destination = new Dictionary<Vector3Int, Color>();
-
+        var destinationsBySource = new Dictionary<Vector3Int, List<Vector3Int>>();
         foreach (var entry in source)
         {
+            destinationsBySource[entry.Key] = new List<Vector3Int>();
             Vector3Int relative = entry.Key - bounds.min;
             Vector3Int baseCell = bounds.min + new Vector3Int(relative.x * factors.x, relative.y * factors.y, relative.z * factors.z);
 
@@ -99,11 +101,12 @@ public class VoxelEditOperations : MonoBehaviour
                         if (destination.ContainsKey(target)) return false;
 
                         destination.Add(target, entry.Value);
+                        destinationsBySource[entry.Key].Add(target);
                     }
                 }
             }
         }
-        ApplyReplacement(source, destination);
+        ApplyReplacement(source, destination, destinationsBySource);
         Debug.Log($"[VoxelEditOperations] Scaled {source.Count} into " + $"{destination.Count} voxels.");
 
         return true;
@@ -164,16 +167,20 @@ public class VoxelEditOperations : MonoBehaviour
         }
         else
         {
-            ApplyReplacement(source, destination);
+            var destinationsBySource = new Dictionary<Vector3Int, List<Vector3Int>>();
+            foreach (Vector3Int cell in source.Keys) destinationsBySource[cell] = new List<Vector3Int> { map(cell) };
+            ApplyReplacement(source, destination, destinationsBySource);
         }
 
         Debug.Log($"[VoxelEditOperations] {(duplicate ? "Duplicated" : "Transformed")} {source.Count} voxels.");
         return true;
     }
-    private void ApplyReplacement(Dictionary<Vector3Int, Color> source, Dictionary<Vector3Int, Color> destination)
+    private void ApplyReplacement(Dictionary<Vector3Int, Color> source, Dictionary<Vector3Int, Color> destination, Dictionary<Vector3Int, List<Vector3Int>> destinationsBySource)
     {
+        var capturedGroups = groupManager != null ? groupManager.CaptureGroups(source.Keys) : null;
         foreach (Vector3Int cell in source.Keys) voxelModel.RemoveVoxel(cell);
         foreach (var entry in destination) voxelModel.AddVoxel(entry.Key, entry.Value);
+        if (groupManager != null && capturedGroups != null) groupManager.RestoreGroups(capturedGroups, destinationsBySource);
         selectionManager.ReplaceSelection(destination.Keys);
     }
 }

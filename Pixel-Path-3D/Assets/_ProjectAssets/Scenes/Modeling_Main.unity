@@ -318,10 +318,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HandToolButton
   tool: 9
-  toolManager: {fileID: 0}
+  toolManager: {fileID: 1928403242}
   onToolPressed:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1189714300}
+        m_TargetAssemblyTypeName: UngroupTool, Assembly-CSharp
+        m_MethodName: UngroupSelectedFromButton
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &104628985 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4602863311197689331, guid: f81d631bf6ae2b349914ce8514183cfa, type: 3}
@@ -340,7 +352,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HandToolButton
   tool: 6
-  toolManager: {fileID: 0}
+  toolManager: {fileID: 1928403242}
   onToolPressed:
     m_PersistentCalls:
       m_Calls: []
@@ -702,6 +714,7 @@ MonoBehaviour:
   voxelModel: {fileID: 962505121}
   voxelGrid: {fileID: 972695842}
   selectionManager: {fileID: 545909709}
+  groupManager: {fileID: 545909711}
 --- !u!114 &255035297 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 997035080128087747, guid: c9aa994b6672750469f15472eb7ca2e4, type: 3}
@@ -1138,10 +1151,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HandToolButton
   tool: 7
-  toolManager: {fileID: 0}
+  toolManager: {fileID: 1928403242}
   onToolPressed:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1189714298}
+        m_TargetAssemblyTypeName: DeleteTool, Assembly-CSharp
+        m_MethodName: DeleteSelectedFromButton
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &367827127
 GameObject:
   m_ObjectHideFlags: 0
@@ -1737,6 +1762,7 @@ GameObject:
   m_Component:
   - component: {fileID: 545909710}
   - component: {fileID: 545909709}
+  - component: {fileID: 545909711}
   m_Layer: 0
   m_Name: SelectionManager
   m_TagString: Untagged
@@ -1758,6 +1784,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SelectionManager
   voxelModel: {fileID: 962505121}
   toolManager: {fileID: 1928403242}
+  groupManager: {fileID: 545909711}
 --- !u!4 &545909710
 Transform:
   m_ObjectHideFlags: 0
@@ -1773,6 +1800,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 367827128}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &545909711
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 545909708}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d60d6b81c49c6d4892577825461019c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::VoxelGroupManager
+  voxelModel: {fileID: 962505121}
 --- !u!4 &549013004 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2504121614648806086, guid: d6878e1999eb4b44a9f5a263af86c185, type: 3}
@@ -4574,6 +4614,10 @@ GameObject:
   - component: {fileID: 1189714294}
   - component: {fileID: 1189714295}
   - component: {fileID: 1189714296}
+  - component: {fileID: 1189714297}
+  - component: {fileID: 1189714298}
+  - component: {fileID: 1189714299}
+  - component: {fileID: 1189714300}
   m_Layer: 0
   m_Name: SelectTool
   m_TagString: Untagged
@@ -4629,6 +4673,63 @@ MonoBehaviour:
   voxelGrid: {fileID: 972695842}
   voxelModel: {fileID: 962505121}
   colorManager: {fileID: 374909674}
+--- !u!114 &1189714297
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1189714293}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 091fbb2791b6f394aa781d21391d6c57, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DuplicateTool
+  toolManager: {fileID: 1928403242}
+  selectionManager: {fileID: 545909709}
+  editOperations: {fileID: 254324063}
+--- !u!114 &1189714298
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1189714293}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a3607c5c38898048be48762e2ada36c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DeleteTool
+  selectionManager: {fileID: 545909709}
+  editOperations: {fileID: 254324063}
+--- !u!114 &1189714299
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1189714293}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a3e7598e7c0e1b444a0d537137429703, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GroupTool
+  selectionManager: {fileID: 545909709}
+  groupManager: {fileID: 545909711}
+--- !u!114 &1189714300
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1189714293}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08858da968b11f04db5c1387200fc30b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UngroupTool
+  selectionManager: {fileID: 545909709}
+  groupManager: {fileID: 545909711}
 --- !u!1 &1240689852
 GameObject:
   m_ObjectHideFlags: 0
@@ -5410,10 +5511,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HandToolButton
   tool: 8
-  toolManager: {fileID: 0}
+  toolManager: {fileID: 1928403242}
   onToolPressed:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1189714299}
+        m_TargetAssemblyTypeName: GroupTool, Assembly-CSharp
+        m_MethodName: GroupSelectedFromButton
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1410278586
 GameObject:
   m_ObjectHideFlags: 0
@@ -5569,10 +5682,10 @@ MonoBehaviour:
   paintTool: {fileID: 222466429}
   handMenuController: {fileID: 478679884}
   colorPickerButton: {fileID: 0}
-  duplicateButton: {fileID: 0}
-  deleteButton: {fileID: 0}
-  groupButton: {fileID: 0}
-  ungroupButton: {fileID: 0}
+  duplicateButton: {fileID: 104628989}
+  deleteButton: {fileID: 354696372}
+  groupButton: {fileID: 1402429474}
+  ungroupButton: {fileID: 93334939}
   hsvAddToPalette: {fileID: 1479511704}
   customPagination: {fileID: 1568924094}
   logActions: 1
@@ -7496,6 +7609,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1761556387}
   - component: {fileID: 1761556388}
+  - component: {fileID: 1761556389}
   m_Layer: 0
   m_Name: XRMoveInput
   m_TagString: Untagged
@@ -7533,6 +7647,26 @@ MonoBehaviour:
   coordinator: {fileID: 948345324}
   toolManager: {fileID: 1928403242}
   moveTool: {fileID: 1465660579}
+  voxelGrid: {fileID: 972695842}
+  expandedMenus:
+  - {fileID: 0}
+  - {fileID: 1155272093}
+  - {fileID: 1828059409}
+--- !u!114 &1761556389
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1761556386}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e1b4f6d4f85e244aaa1b8e39c23ff44, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::XRDuplicateInput
+  coordinator: {fileID: 948345324}
+  toolManager: {fileID: 1928403242}
+  duplicateTool: {fileID: 1189714297}
   voxelGrid: {fileID: 972695842}
   expandedMenus:
   - {fileID: 0}
