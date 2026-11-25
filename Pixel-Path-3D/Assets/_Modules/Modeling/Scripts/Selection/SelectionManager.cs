@@ -6,6 +6,7 @@ public class SelectionManager : MonoBehaviour
 {
     [SerializeField] private VoxelModel voxelModel;
     [SerializeField] private ToolManager toolManager;
+    [SerializeField] private VoxelGroupManager groupManager;
     private readonly HashSet<Vector3Int> selected = new();
     public IReadOnlyCollection<Vector3Int> Selected => selected;
     public bool HasSelection => selected.Count > 0;
@@ -81,6 +82,22 @@ public class SelectionManager : MonoBehaviour
 
     public void ToggleSelection(Vector3Int cell)
     {
+        if (groupManager != null && groupManager.TryGetGroupCells(cell, out IReadOnlyCollection<Vector3Int> groupCells))
+        {
+            bool entireGroupSelected = selected.IsSupersetOf(groupCells);
+            if (entireGroupSelected)
+            {
+                foreach (Vector3Int member in groupCells) selected.Remove(member);
+                Debug.Log("[SelectionManager] Group deselected.");
+            }
+            else
+            {
+                foreach (Vector3Int member in groupCells) { if (CanSelect(member)) selected.Add(member); }
+                Debug.Log("[SelectionManager] Entire group selected.");
+            }
+            OnSelectionChanged?.Invoke();
+            return;
+        }
         if (selected.Contains(cell))
         {
             selected.Remove(cell);
