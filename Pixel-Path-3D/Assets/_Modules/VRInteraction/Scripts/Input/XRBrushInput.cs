@@ -22,11 +22,8 @@ public class XRBrushInput : MonoBehaviour
     [SerializeField, Min(0.1f)] private float maxDistance = 3f;
 
     [Header("Pinch Detection")]
-    [SerializeField, Min(0.001f)]
-    private float pinchStartDistance = 0.025f;
-
-    [SerializeField, Min(0.001f)]
-    private float pinchReleaseDistance = 0.04f;
+    [SerializeField, Min(0.001f)] private float pinchStartDistance = 0.025f;
+    [SerializeField, Min(0.001f)] private float pinchReleaseDistance = 0.04f;
 
     [Header("Working Layer")]
     [SerializeField] private bool workingLayerMode;
@@ -37,6 +34,9 @@ public class XRBrushInput : MonoBehaviour
 
     [Header("Direct Painting")]
     [SerializeField] private bool directPainting = true;
+    [Header("Continuous Free Brush")]
+    [SerializeField, Min(0.1f)] private float freeBrushSpacing = 1f;
+    [SerializeField, Min(1)] private int maxFreeVoxelsPerFrame = 32;
 
     private readonly List<XRHandSubsystem> handSubsystems = new();
     private XRHandSubsystem handSubsystem;
@@ -44,8 +44,10 @@ public class XRBrushInput : MonoBehaviour
     private bool interactionBlocked;
     private bool strokeReady;
     private bool strokeActive;
+    private bool strokeFreeMode;
     private bool ownsTransaction;
     private Vector3Int lastStrokeCell;
+    private Vector3 lastFreeStrokePosition;
     private bool IsFreeMode => modelingSettings != null && modelingSettings.CurrentMode == PlacementMode.Free;
 
     private void Start()
@@ -91,6 +93,46 @@ public class XRBrushInput : MonoBehaviour
             float t = (float)i / steps;
             Vector3Int cell = Vector3Int.RoundToInt(Vector3.Lerp((Vector3)from, (Vector3)to, t));
             brushTool.PaintCell(cell);
+        }
+    }
+    private void PaintFreeStroke(Vector3 position)
+    {
+        if (!voxelGrid.IsInsideGrid(voxelGrid.WorldToVoxel(position)))
+        {
+            strokeActive = false;
+            brushTool.ClearTarget();
+            return;
+        }
+
+        if (!strokeActive)
+        {
+            brushTool.UpdateFreeTarget(position);
+            brushTool.PlaceVoxel();
+            lastFreeStrokePosition = position;
+            strokeActive = true;
+            strokeFreeMode = true;
+            return;
+        }
+
+        float spacing = Mathf.Max(0.001f, voxelGrid.VoxelSize * freeBrushSpacing);
+        int placed = 0;
+
+        while (Vector3.Distance(lastFreeStrokePosition, position) >= spacing && placed < maxFreeVoxelsPerFrame)
+        {
+            Vector3 nextPosition = Vector3.MoveTowards(lastFreeStrokePosition, position, spacing);
+
+            if (!voxelGrid.IsInsideGrid(voxelGrid.WorldToVoxel(nextPosition)))
+            {
+                strokeActive = false;
+                brushTool.ClearTarget();
+                return;
+            }
+
+            brushTool.UpdateFreeTarget(nextPosition);
+            brushTool.PlaceVoxel();
+
+            lastFreeStrokePosition = nextPosition;
+            placed++;
         }
     }
 
@@ -143,6 +185,7 @@ public class XRBrushInput : MonoBehaviour
             strokeReady = true;
             strokeActive = false;
         }
+        if (strokeActive && strokeFreeMode != IsFreeMode) { ResetStroke(); brushTool.ClearTarget(); return; }
 
         if (pinchStarted && strokeReady) BeginHistory();
 
@@ -150,14 +193,20 @@ public class XRBrushInput : MonoBehaviour
         {
             UpdateDirectTarget();
 
-            if (IsFreeMode) { if (pinchStarted && strokeReady) brushTool.PlaceVoxel(); }
+            if (IsFreeMode) { if (isPinching && strokeReady) PaintFreeStroke(indexTip.position); }
             else if (isPinching && strokeReady)
             {
                 Vector3Int cell = voxelGrid.WorldToVoxel(indexTip.position);
 
                 if (voxelGrid.IsInsideGrid(cell))
                 {
-                    if (!strokeActive) { brushTool.PaintCell(cell); lastStrokeCell = cell; strokeActive = true; }
+                    if (!strokeActive)
+                    {
+                        brushTool.PaintCell(cell);
+                        lastStrokeCell = cell;
+                        strokeActive = true;
+                        strokeFreeMode = false;
+                    }
                     else if (cell != lastStrokeCell) { PaintBetween(lastStrokeCell, cell); lastStrokeCell = cell; }
                     UpdateDirectTarget();
                 }
