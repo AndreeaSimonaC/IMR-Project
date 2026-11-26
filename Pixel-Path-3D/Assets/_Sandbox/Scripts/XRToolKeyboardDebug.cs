@@ -23,6 +23,8 @@ public class XRToolKeyboardDebug : MonoBehaviour
     [SerializeField] private HandToolButton ungroupButton;
     [SerializeField] private HSVAddToPalette hsvAddToPalette;
     [SerializeField] private CustomPalettePagination customPagination;
+    [SerializeField] private ModelingSettings modelingSettings;
+    [SerializeField] private UndoRedoManager undoRedoManager;
 
     [Header("Debug")]
     [SerializeField] private bool logActions = true;
@@ -56,7 +58,11 @@ public class XRToolKeyboardDebug : MonoBehaviour
         if (keyboard.xKey.wasPressedThisFrame) OpenDebugMenu(PalmMenuTab.None);
 
         bool shift = keyboard.leftShiftKey.isPressed || keyboard.rightShiftKey.isPressed;
+        if (keyboard.numpadMinusKey.wasPressedThisFrame && undoRedoManager != null) { undoRedoManager.Undo(); LogExecuted("Undo"); }
+        if (keyboard.numpadPlusKey.wasPressedThisFrame && undoRedoManager != null) { undoRedoManager.Redo(); LogExecuted("Redo"); }
         if (!shift) return;
+        if (keyboard.f9Key.wasPressedThisFrame && modelingSettings != null) modelingSettings.SetSnapToGrid();
+        if (keyboard.f10Key.wasPressedThisFrame && modelingSettings != null) modelingSettings.SetFreePlacement();
         if (keyboard.fKey.wasPressedThisFrame) { LogAction("Paint Selected", paintTool != null && paintTool.PaintSelected()); }
 
         if (keyboard.pKey.wasPressedThisFrame) { ActivateTool(HandTool.ColorPicker); }
@@ -81,8 +87,8 @@ public class XRToolKeyboardDebug : MonoBehaviour
         }
         if (keyboard.dKey.wasPressedThisFrame) PressOptionalButton(duplicateButton, "Duplicate");
         if (keyboard.deleteKey.wasPressedThisFrame) PressOptionalButton(deleteButton, "Delete");
-        if (keyboard.yKey.wasPressedThisFrame) PressOptionalButton(groupButton, "Group");
-        if (keyboard.zKey.wasPressedThisFrame) PressOptionalButton(ungroupButton, "Ungroup");
+        if (keyboard.qKey.wasPressedThisFrame) PressOptionalButton(groupButton, "Group");
+        if (keyboard.wKey.wasPressedThisFrame) PressOptionalButton(ungroupButton, "Ungroup");
         switch (toolManager.ActiveTool)
         {
             case HandTool.Brush:
@@ -121,7 +127,6 @@ public class XRToolKeyboardDebug : MonoBehaviour
                 if (keyboard.rKey.wasPressedThisFrame) LogAction("Rotate X", rotateTool.RotateX());
                 if (keyboard.tKey.wasPressedThisFrame) LogAction("Rotate Y", rotateTool.RotateY());
                 if (keyboard.pKey.wasPressedThisFrame) LogAction("Rotate Z", rotateTool.RotateZ());
-
                 break;
 
             case HandTool.Scale:

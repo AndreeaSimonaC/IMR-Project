@@ -1,0 +1,224 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &5349586974735610928
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5561946791470195964}
+  m_Layer: 0
+  m_Name: RightForearmUndoRedoMenu
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5561946791470195964
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5349586974735610928}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.000000029802326, y: -0.118625075, z: 0.000000029802326, w: 0.9929392}
+  m_LocalPosition: {x: 0.013, y: 0.0322, z: -0.0968}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 2288679085936626780}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -13.626, z: 0}
+--- !u!1001 &3676546529289843331
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 5561946791470195964}
+    m_Modifications:
+    - target: {fileID: 208063836302664999, guid: 3c63c82d67020cb40a7eb95c316fda4e, type: 3}
+      propertyPath: m_Name
+      value: RightForearmButtonRedo
+      objectReference: {fileID: 0}
+    - target: {fileID: 314283648419638785, guid: 3c63c82d67020cb40a7eb95c316fda4e, type: 3}
+      propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 314283648419638785, guid: 3c63c82d67020cb40a7eb95c316fda4e, type: 3}
+      propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 314283648419638785, guid: 3c63c82d67020cb40a7eb95c316fda4e, type: 3}
+      propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 314283648419638785, guid: 3c63c82d67020cb40a7eb95c316fda4e, type: 3}
+      propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: SetSnapToGrid
+      objectReference: {fileID: 0}
+    - target: {fileID: 314283648419638785, guid: 3c63c82d67020cb40a7eb95c316fda4e, type: 3}
+      propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: ModelingSettings, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 314283648419638785, guid: 3c63c82d67020cb40a7eb95c316fda4e, type: 3}
+      propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 1087205101140468079, guid: 3c63c82d67020cb40a7eb95c316fda4e, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -8328829484392482347, guid: e48841dd49b8f944d929c095a387a71a, type: 3}
+    - target: {fileID: 1782619935678907878, guid: 3c63c82d67020cb40a7eb95c316fda4e, type: 3}
+      propertyPath: m_Name
+      value: RightForearmButtonUndoIcon
+      objectReference: {fileID: 0}
+    - target: {fileID: 1958937649472699628, guid: 3c63c82d67020cb40a7eb95c316fda4e, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1958937649472699628, guid: 3c63c82d67020cb40a7eb95c316fda4e, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1958937649472699628, guid: 3c63c82d67020cb40a7eb95c316fda4e, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1958937649472699628, guid: 3c63c82d67020cb40a7eb95c316fda4e, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1958937649472699628, guid: 3c63c82d67020cb40a7eb95c316fda4e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 180
+      objectReference: {fileID: 0}
+    - target: {fileID: 1958937649472699628, guid: 3c63c82d67020cb40a7eb95c316fda4e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1958937649472699628, guid: 3c63c82d67020cb40a7eb95c316fda4e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 180
+      objectReference: {fileID: 0}
+    - target: {fileID: 2168473861675068589, guid: 3c63c82d67020cb40a7eb95c316fda4e, type: 3}
+      propertyPath: m_Name
+      value: RightForearmButtonRedoIcon
+      objectReference: {fileID: 0}
+    - target: {fileID: 3226461992304410335, guid: 3c63c82d67020cb40a7eb95c316fda4e, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.0000031292439
+      objectReference: {fileID: 0}
+    - target: {fileID: 3226461992304410335, guid: 3c63c82d67020cb40a7eb95c316fda4e, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3226461992304410335, guid: 3c63c82d67020cb40a7eb95c316fda4e, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.079997614
+      objectReference: {fileID: 0}
+    - target: {fileID: 3226461992304410335, guid: 3c63c82d67020cb40a7eb95c316fda4e, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.08774791
+      objectReference: {fileID: 0}
+    - target: {fileID: 3226461992304410335, guid: 3c63c82d67020cb40a7eb95c316fda4e, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.14298148
+      objectReference: {fileID: 0}
+    - target: {fileID: 3226461992304410335, guid: 3c63c82d67020cb40a7eb95c316fda4e, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.0021049643
+      objectReference: {fileID: 0}
+    - target: {fileID: 3226461992304410335, guid: 3c63c82d67020cb40a7eb95c316fda4e, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.98582566
+      objectReference: {fileID: 0}
+    - target: {fileID: 3226461992304410335, guid: 3c63c82d67020cb40a7eb95c316fda4e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -107.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 3226461992304410335, guid: 3c63c82d67020cb40a7eb95c316fda4e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 194.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 3226461992304410335, guid: 3c63c82d67020cb40a7eb95c316fda4e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: -10
+      objectReference: {fileID: 0}
+    - target: {fileID: 4024439168197995301, guid: 3c63c82d67020cb40a7eb95c316fda4e, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -8328829484392482347, guid: e48841dd49b8f944d929c095a387a71a, type: 3}
+    - target: {fileID: 4375832770436571815, guid: 3c63c82d67020cb40a7eb95c316fda4e, type: 3}
+      propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4375832770436571815, guid: 3c63c82d67020cb40a7eb95c316fda4e, type: 3}
+      propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4375832770436571815, guid: 3c63c82d67020cb40a7eb95c316fda4e, type: 3}
+      propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4375832770436571815, guid: 3c63c82d67020cb40a7eb95c316fda4e, type: 3}
+      propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: SetFreePlacement
+      objectReference: {fileID: 0}
+    - target: {fileID: 4375832770436571815, guid: 3c63c82d67020cb40a7eb95c316fda4e, type: 3}
+      propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: ModelingSettings, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 4375832770436571815, guid: 3c63c82d67020cb40a7eb95c316fda4e, type: 3}
+      propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 4602863311197689331, guid: 3c63c82d67020cb40a7eb95c316fda4e, type: 3}
+      propertyPath: m_Name
+      value: RightForearmButtonUndo
+      objectReference: {fileID: 0}
+    - target: {fileID: 6878463156950145097, guid: 3c63c82d67020cb40a7eb95c316fda4e, type: 3}
+      propertyPath: m_Name
+      value: RightForearmButtonUndoCanvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 7593969314168264103, guid: 3c63c82d67020cb40a7eb95c316fda4e, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7593969314168264103, guid: 3c63c82d67020cb40a7eb95c316fda4e, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7593969314168264103, guid: 3c63c82d67020cb40a7eb95c316fda4e, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7593969314168264103, guid: 3c63c82d67020cb40a7eb95c316fda4e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 180
+      objectReference: {fileID: 0}
+    - target: {fileID: 7593969314168264103, guid: 3c63c82d67020cb40a7eb95c316fda4e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 180
+      objectReference: {fileID: 0}
+    - target: {fileID: 8083861802802196941, guid: 3c63c82d67020cb40a7eb95c316fda4e, type: 3}
+      propertyPath: m_Name
+      value: RightForearmButtonRedoCanvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 8917664979043651717, guid: 3c63c82d67020cb40a7eb95c316fda4e, type: 3}
+      propertyPath: m_Name
+      value: RightForearmUndeRedoMenu
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 3c63c82d67020cb40a7eb95c316fda4e, type: 3}
+--- !u!4 &2288679085936626780 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3226461992304410335, guid: 3c63c82d67020cb40a7eb95c316fda4e, type: 3}
+  m_PrefabInstance: {fileID: 3676546529289843331}
+  m_PrefabAsset: {fileID: 0}

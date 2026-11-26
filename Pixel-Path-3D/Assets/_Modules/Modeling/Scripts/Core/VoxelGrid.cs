@@ -5,6 +5,7 @@ public class VoxelGrid : MonoBehaviour
 {
     [SerializeField] private Transform gridFloor;
     [SerializeField] private MeshFilter gridLines;
+    [SerializeField] private MeshFilter gridDots;
     [SerializeField] private PlatformBeamFit platformBeam;
     [SerializeField, Min(0.001f)]
     private float voxelSize = 0.05f;
@@ -12,12 +13,17 @@ public class VoxelGrid : MonoBehaviour
     private float floorThickness = 0.01f;
     [SerializeField, Min(0.0001f)]
     private float lineThickness = 0.001f;
+    [SerializeField, Min(0.0001f)]
+    private float dotSize = 0.003f;
+    [SerializeField, Range(0.5f, 2f)]
+    private float cornerHeight = 1.5f;
+    [SerializeField, Min(0.0001f)]
+    private float cornerLineThickness = 0.002f;
     private Mesh generatedMesh;
-
+    private Mesh generatedDotsMesh;
     private void Start()
     {
-        if (gridFloor == null || gridLines == null) { Debug.LogError("VoxelGrid: Floor or lines not assigned!", this); return; }
-
+        if (gridFloor == null || gridLines == null || gridDots == null) { Debug.LogError("VoxelGrid: Floor, lines or dots not assigned!", this); return; }
         int width = ProjectSettings.Width;
         int length = ProjectSettings.Length;
         float floorWidth = width * voxelSize;
@@ -41,7 +47,7 @@ public class VoxelGrid : MonoBehaviour
         var triangles = new List<int>();
         float halfWidth = width * voxelSize / 2f;
         float halfLength = length * voxelSize / 2f;
-        float y = 0.002f;
+        float y = 0.004f;
 
         for (int x = 0; x <= width; x++)
         {
@@ -55,6 +61,19 @@ public class VoxelGrid : MonoBehaviour
             AddLine(vertices, triangles, new Vector3(-halfWidth, y, positionZ), new Vector3(halfWidth, y, positionZ));
         }
 
+        var dotVertices = new List<Vector3>();
+        var dotTriangles = new List<int>();
+
+        for (int x = 0; x <= width; x++)
+        {
+            for (int z = 0; z <= length; z++)
+            {
+                float positionX = -halfWidth + x * voxelSize;
+                float positionZ = -halfLength + z * voxelSize;
+                AddDot(dotVertices, dotTriangles, new Vector3(positionX, y + 0.0002f, positionZ));
+            }
+        }
+        AddCornerMarkers(dotVertices, dotTriangles, halfWidth, halfLength, y + 0.0002f);
         generatedMesh = new Mesh { name = "Voxel Grid Lines" };
         generatedMesh.SetVertices(vertices);
         generatedMesh.SetTriangles(triangles, 0);
@@ -65,6 +84,20 @@ public class VoxelGrid : MonoBehaviour
         gridLines.transform.localRotation = Quaternion.identity;
         gridLines.transform.localScale = Vector3.one;
         gridLines.sharedMesh = generatedMesh;
+
+        if (generatedDotsMesh != null) Destroy(generatedDotsMesh);
+
+        generatedDotsMesh = new Mesh { name = "Voxel Grid Dots" };
+        generatedDotsMesh.SetVertices(dotVertices);
+        generatedDotsMesh.SetTriangles(dotTriangles, 0);
+        generatedDotsMesh.RecalculateNormals();
+        generatedDotsMesh.RecalculateBounds();
+
+        gridDots.transform.localPosition = Vector3.zero;
+        gridDots.transform.localRotation = Quaternion.identity;
+        gridDots.transform.localScale = Vector3.one;
+        gridDots.sharedMesh = generatedDotsMesh;
+
     }
 
     private void AddLine(List<Vector3> vertices, List<int> triangles, Vector3 start, Vector3 end)
@@ -85,6 +118,65 @@ public class VoxelGrid : MonoBehaviour
         triangles.Add(index);
         triangles.Add(index + 3);
         triangles.Add(index + 2);
+    }
+    private void AddDot(List<Vector3> vertices, List<int> triangles, Vector3 center)
+    {
+        const int segments = 12;
+        float radius = dotSize / 2f;
+        int index = vertices.Count;
+
+        vertices.Add(center);
+
+        for (int i = 0; i <= segments; i++)
+        {
+            float angle = i * Mathf.PI * 2f / segments;
+            vertices.Add(center + new Vector3(Mathf.Cos(angle) * radius, 0, Mathf.Sin(angle) * radius));
+        }
+
+        for (int i = 0; i < segments; i++)
+        {
+            triangles.Add(index);
+            triangles.Add(index + i + 1);
+            triangles.Add(index + i + 2);
+        }
+    }
+
+    private void AddCornerMarkers(List<Vector3> vertices, List<int> triangles, float halfWidth, float halfLength, float y)
+    {
+        float height = cornerHeight * voxelSize;
+        Vector3[] corners = { new Vector3(-halfWidth, y, -halfLength), new Vector3(-halfWidth, y, halfLength), new Vector3(halfWidth, y, -halfLength), new Vector3(halfWidth, y, halfLength) };
+
+        foreach (Vector3 corner in corners)
+        {
+            Vector3 top = corner + Vector3.up * height;
+            AddVerticalMarker(vertices, triangles, corner, top);
+            AddDot(vertices, triangles, top);
+        }
+    }
+
+    private void AddVerticalMarker(List<Vector3> vertices, List<int> triangles, Vector3 start, Vector3 end)
+    {
+        float half = cornerLineThickness / 2f;
+        int index = vertices.Count;
+        vertices.Add(start + Vector3.right * half);
+        vertices.Add(start - Vector3.right * half);
+        vertices.Add(end - Vector3.right * half);
+        vertices.Add(end + Vector3.right * half);
+        vertices.Add(start + Vector3.forward * half);
+        vertices.Add(start - Vector3.forward * half);
+        vertices.Add(end - Vector3.forward * half);
+        vertices.Add(end + Vector3.forward * half);
+
+        for (int face = 0; face < 2; face++)
+        {
+            int i = index + face * 4;
+            triangles.Add(i);
+            triangles.Add(i + 1);
+            triangles.Add(i + 2);
+            triangles.Add(i);
+            triangles.Add(i + 2);
+            triangles.Add(i + 3);
+        }
     }
 
     public float VoxelSize => voxelSize;
@@ -158,5 +250,5 @@ public class VoxelGrid : MonoBehaviour
 
 #endif
 
-    private void OnDestroy() { if (generatedMesh != null) Destroy(generatedMesh); }
+    private void OnDestroy() { if (generatedMesh != null) Destroy(generatedMesh); if (generatedDotsMesh != null) Destroy(generatedDotsMesh); }
 }

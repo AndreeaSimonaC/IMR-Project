@@ -9,6 +9,7 @@ public class XRSelectInput : MonoBehaviour
     [SerializeField] private SelectTool selectTool;
     [SerializeField] private VoxelGrid voxelGrid;
     [SerializeField] private VoxelModel voxelModel;
+    [SerializeField] private VoxelRenderer voxelRenderer;
 
     [Header("Menu Blocking")]
     [SerializeField] private GameObject[] expandedMenus;
@@ -46,17 +47,12 @@ public class XRSelectInput : MonoBehaviour
 
         wasAvailable = true;
 
-        Vector3Int cell = voxelGrid.WorldToVoxel(hand.IndexTipPosition);
-
-        bool validTarget = voxelGrid.IsInsideGrid(cell) && voxelModel.HasVoxel(cell);
-
-        if (validTarget) selectTool.UpdateCellTarget(cell);
-        else selectTool.ClearTarget();
+        bool validTarget = UpdateFingerTarget(hand.IndexTipPosition);
 
         if (hand.PinchStarted && validTarget)
         {
             selectTool.SelectTarget(true);
-            Debug.Log($"[XRSelectInput] Toggled voxel {cell}", this);
+            Debug.Log("[XRSelectInput] Toggled selection.", this);
         }
     }
 
@@ -90,5 +86,44 @@ public class XRSelectInput : MonoBehaviour
         wasAvailable = false;
         coordinator?.RequireFreshPinch();
         selectTool?.ClearTarget();
+    }
+    private bool UpdateFingerTarget(Vector3 fingerPosition)
+    {
+        if (voxelRenderer != null)
+        {
+            Collider[] hits = Physics.OverlapSphere(fingerPosition, voxelGrid.VoxelSize * 0.45f, ~0, QueryTriggerInteraction.Ignore);
+            VoxelObject closestObject = null;
+            float closestDistance = float.PositiveInfinity;
+
+            foreach (Collider hit in hits)
+            {
+                if (!voxelRenderer.TryGetObject(hit.transform, out VoxelObject obj)) continue;
+                if (obj == null || obj.Model == null || obj.Model == voxelModel) continue;
+                float distance = (hit.ClosestPoint(fingerPosition) - fingerPosition).sqrMagnitude;
+
+                if (distance < closestDistance)
+                {
+                    closestDistance = distance;
+                    closestObject = obj;
+                }
+            }
+
+            if (closestObject != null)
+            {
+                selectTool.UpdateObjectTarget(closestObject);
+                return selectTool.HasTarget;
+            }
+        }
+
+        Vector3Int cell = voxelGrid.WorldToVoxel(fingerPosition);
+
+        if (voxelGrid.IsInsideGrid(cell) && voxelModel.HasVoxel(cell))
+        {
+            selectTool.UpdateCellTarget(cell);
+            return selectTool.HasTarget;
+        }
+
+        selectTool.ClearTarget();
+        return false;
     }
 }

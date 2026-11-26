@@ -165,6 +165,9 @@ MonoBehaviour:
   isToolButton: 1
   tool: 4
   toolManager: {fileID: 1928403242}
+  isPlacementModeButton: 0
+  placementMode: 0
+  modelingSettings: {fileID: 0}
 --- !u!114 &44473538
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -182,6 +185,65 @@ MonoBehaviour:
   onToolPressed:
     m_PersistentCalls:
       m_Calls: []
+--- !u!1 &46781897
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 46781898}
+  - component: {fileID: 46781899}
+  m_Layer: 0
+  m_Name: XRWorkspaceRotateInput
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &46781898
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 46781897}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 771663819}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &46781899
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 46781897}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9354fa495e2f8ed4baa1278b4ac61b7f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::XRWorkspaceRotateInput
+  coordinator: {fileID: 948345324}
+  toolManager: {fileID: 1928403242}
+  modelRotationPivot: {fileID: 1047920652}
+  gridFloorCollider: {fileID: 2110906976}
+  objectManager: {fileID: 308496275}
+  defaultVoxelModel: {fileID: 962505121}
+  undoRedoManager: {fileID: 783386746}
+  leftWrist: {fileID: 1449942206}
+  leftIndexTip: {fileID: 1468541027}
+  headCamera: {fileID: 1948693204}
+  maxPointingDistance: 3
+  degreesPerMeter: 180
+  expandedMenus:
+  - {fileID: 1155272093}
+  - {fileID: 1828059409}
 --- !u!1001 &48464274
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -298,6 +360,8 @@ Transform:
   - {fileID: 1928403241}
   - {fileID: 962505120}
   - {fileID: 1297761909}
+  - {fileID: 308496276}
+  - {fileID: 783386747}
   m_Father: {fileID: 1698838087}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &93334935 stripped
@@ -432,6 +496,37 @@ Transform:
   - {fileID: 766718680}
   m_Father: {fileID: 580325628}
   m_LocalEulerAnglesHint: {x: 0, y: -10, z: 0}
+--- !u!1 &161373384
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 161373385}
+  m_Layer: 0
+  m_Name: PlacementModeControls
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &161373385
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 161373384}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 972695840}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &164074332
 GameObject:
   m_ObjectHideFlags: 0
@@ -482,6 +577,10 @@ MonoBehaviour:
   editOperations: {fileID: 254324063}
   voxelRoot: {fileID: 258689353}
   selectionManager: {fileID: 545909709}
+  voxelRenderer: {fileID: 1297761910}
+  objectManager: {fileID: 308496275}
+  groupManager: {fileID: 545909711}
+  undoRedoManager: {fileID: 783386746}
 --- !u!1 &172529699 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8917664979043651717, guid: eb164a8f110003e48bd92f760ea48c98, type: 3}
@@ -614,6 +713,7 @@ MonoBehaviour:
   voxelModel: {fileID: 962505121}
   selectionManager: {fileID: 545909709}
   colorManager: {fileID: 374909674}
+  undoRedoManager: {fileID: 0}
 --- !u!4 &246207277 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2216075854267481603, guid: d6878e1999eb4b44a9f5a263af86c185, type: 3}
@@ -650,6 +750,9 @@ MonoBehaviour:
   isToolButton: 1
   tool: 3
   toolManager: {fileID: 1928403242}
+  isPlacementModeButton: 0
+  placementMode: 0
+  modelingSettings: {fileID: 0}
 --- !u!114 &251068285
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -715,6 +818,8 @@ MonoBehaviour:
   voxelGrid: {fileID: 972695842}
   selectionManager: {fileID: 545909709}
   groupManager: {fileID: 545909711}
+  modelingSettings: {fileID: 1698838088}
+  undoRedoManager: {fileID: 783386746}
 --- !u!114 &255035297 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 997035080128087747, guid: c9aa994b6672750469f15472eb7ca2e4, type: 3}
@@ -910,6 +1015,9 @@ MonoBehaviour:
   isToolButton: 1
   tool: 5
   toolManager: {fileID: 1928403242}
+  isPlacementModeButton: 0
+  placementMode: 0
+  modelingSettings: {fileID: 0}
 --- !u!114 &268905477
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1064,6 +1172,50 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8479901570945370981, guid: 00920ca576a3143459175052c3a7ba0a, type: 3}
   m_PrefabInstance: {fileID: 3420180563151445535}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &308496274
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 308496276}
+  - component: {fileID: 308496275}
+  m_Layer: 0
+  m_Name: VoxelObjectManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &308496275
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 308496274}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0885681a27b458542b7d94277e44fc05, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::VoxelObjectManager
+--- !u!4 &308496276
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 308496274}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 88686459}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &317541931 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4602863311197689331, guid: 8dd6c3a19ccd3d045adc4a7f31fd097f, type: 3}
@@ -1128,6 +1280,9 @@ MonoBehaviour:
   isToolButton: 0
   tool: 0
   toolManager: {fileID: 0}
+  isPlacementModeButton: 0
+  placementMode: 0
+  modelingSettings: {fileID: 0}
 --- !u!4 &321744290 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4290847651000551770, guid: d6878e1999eb4b44a9f5a263af86c185, type: 3}
@@ -1362,6 +1517,96 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3430235981092484804, guid: d6878e1999eb4b44a9f5a263af86c185, type: 3}
   m_PrefabInstance: {fileID: 5534409079552104243}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &446968208
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 446968209}
+  - component: {fileID: 446968211}
+  - component: {fileID: 446968210}
+  m_Layer: 0
+  m_Name: GridDots
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &446968209
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 446968208}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 972695840}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!23 &446968210
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 446968208}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 9e918d49057fa5b4f9033e2a63ff4b88, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_MaskInteraction: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &446968211
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 446968208}
+  m_Mesh: {fileID: 0}
 --- !u!1 &456169380
 GameObject:
   m_ObjectHideFlags: 0
@@ -1410,6 +1655,7 @@ MonoBehaviour:
   toolManager: {fileID: 1928403242}
   eraserTool: {fileID: 164074334}
   voxelGrid: {fileID: 972695842}
+  voxelRenderer: {fileID: 1297761910}
   rayOrigin: {fileID: 583695300}
   targetLayers:
     serializedVersion: 2
@@ -1420,6 +1666,8 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 1155272093}
   - {fileID: 1828059409}
+  defaultVoxelModel: {fileID: 962505121}
+  undoRedoManager: {fileID: 783386746}
 --- !u!1 &463091320 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4602863311197689331, guid: 7c4d89d11bdb50b4dbd6f2126a3cc297, type: 3}
@@ -1752,6 +2000,9 @@ MonoBehaviour:
   isToolButton: 0
   tool: 0
   toolManager: {fileID: 0}
+  isPlacementModeButton: 0
+  placementMode: 0
+  modelingSettings: {fileID: 0}
 --- !u!1 &545909708
 GameObject:
   m_ObjectHideFlags: 0
@@ -1865,6 +2116,7 @@ MonoBehaviour:
   toolManager: {fileID: 1928403242}
   selectionManager: {fileID: 545909709}
   editOperations: {fileID: 254324063}
+  undoRedoManager: {fileID: 783386746}
 --- !u!1 &558337920 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3384859709117616850, guid: 7c4d89d11bdb50b4dbd6f2126a3cc297, type: 3}
@@ -2138,6 +2390,7 @@ MonoBehaviour:
   selectTool: {fileID: 1189714295}
   voxelGrid: {fileID: 972695842}
   voxelModel: {fileID: 962505121}
+  voxelRenderer: {fileID: 1297761910}
   expandedMenus:
   - {fileID: 0}
   - {fileID: 1155272093}
@@ -2159,6 +2412,7 @@ MonoBehaviour:
   colorPickerTool: {fileID: 1189714296}
   voxelGrid: {fileID: 972695842}
   voxelModel: {fileID: 962505121}
+  voxelRenderer: {fileID: 1297761910}
   expandedMenus:
   - {fileID: 0}
   - {fileID: 1155272093}
@@ -2342,6 +2596,9 @@ MonoBehaviour:
   isToolButton: 0
   tool: 0
   toolManager: {fileID: 0}
+  isPlacementModeButton: 0
+  placementMode: 0
+  modelingSettings: {fileID: 0}
 --- !u!4 &697117857 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 9149468511384134093, guid: d6878e1999eb4b44a9f5a263af86c185, type: 3}
@@ -2959,6 +3216,7 @@ Transform:
   - {fileID: 1761556387}
   - {fileID: 815329429}
   - {fileID: 1374595440}
+  - {fileID: 46781898}
   m_Father: {fileID: 1698838087}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &774965039
@@ -3018,6 +3276,50 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3216907cfa47ce741b62ea46e0546c7b, type: 3}
+--- !u!1 &783386745
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 783386747}
+  - component: {fileID: 783386746}
+  m_Layer: 0
+  m_Name: UndoRedoManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &783386746
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 783386745}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 338b0a8367ff8dd4f95c51c737ae5002, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UndoRedoManager
+--- !u!4 &783386747
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 783386745}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 88686459}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &787272619 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7567148663521636403, guid: d6878e1999eb4b44a9f5a263af86c185, type: 3}
@@ -3182,6 +3484,9 @@ MonoBehaviour:
   rotateTool: {fileID: 1448595282}
   selectionManager: {fileID: 545909709}
   voxelGrid: {fileID: 972695842}
+  modelingSettings: {fileID: 1698838088}
+  undoRedoManager: {fileID: 783386746}
+  rightWrist: {fileID: 1348760575}
   rotationThreshold: 60
   expandedMenus:
   - {fileID: 0}
@@ -3628,6 +3933,7 @@ GameObject:
   m_Component:
   - component: {fileID: 962505120}
   - component: {fileID: 962505121}
+  - component: {fileID: 962505122}
   m_Layer: 0
   m_Name: VoxelModel
   m_TagString: Untagged
@@ -3662,6 +3968,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b132e8bdb6e92e444ab3e267b204d13e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::VoxelModel
+--- !u!114 &962505122
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 962505119}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69d6218464a3fe34cb04d4213ffbe091, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::VoxelObject
+  voxelModel: {fileID: 962505121}
 --- !u!1 &972695839
 GameObject:
   m_ObjectHideFlags: 0
@@ -3695,7 +4014,9 @@ Transform:
   m_Children:
   - {fileID: 2110906975}
   - {fileID: 2106143347}
+  - {fileID: 446968209}
   - {fileID: 258689353}
+  - {fileID: 161373385}
   m_Father: {fileID: 923415983}
   m_LocalEulerAnglesHint: {x: 0, y: -134.3, z: 0}
 --- !u!156049354 &972695841
@@ -3724,10 +4045,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::VoxelGrid
   gridFloor: {fileID: 2110906975}
   gridLines: {fileID: 2106143349}
+  gridDots: {fileID: 446968211}
   platformBeam: {fileID: 1120547869}
   voxelSize: 0.1
   floorThickness: 0.01
   lineThickness: 0.001
+  dotSize: 0.01
+  cornerHeight: 2
+  cornerLineThickness: 0.002
 --- !u!114 &975867923 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2942156198692655549, guid: d6878e1999eb4b44a9f5a263af86c185, type: 3}
@@ -3928,6 +4253,135 @@ Transform:
   - {fileID: 923415983}
   m_Father: {fileID: 2090715966}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &1068733746
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1278960369}
+    m_Modifications:
+    - target: {fileID: 208063836302664999, guid: 3c63c82d67020cb40a7eb95c316fda4e, type: 3}
+      propertyPath: m_Name
+      value: LeftSnapFreeMenuButtonFree
+      objectReference: {fileID: 0}
+    - target: {fileID: 314283648419638785, guid: 3c63c82d67020cb40a7eb95c316fda4e, type: 3}
+      propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 314283648419638785, guid: 3c63c82d67020cb40a7eb95c316fda4e, type: 3}
+      propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 314283648419638785, guid: 3c63c82d67020cb40a7eb95c316fda4e, type: 3}
+      propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1698838088}
+    - target: {fileID: 314283648419638785, guid: 3c63c82d67020cb40a7eb95c316fda4e, type: 3}
+      propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 314283648419638785, guid: 3c63c82d67020cb40a7eb95c316fda4e, type: 3}
+      propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: SetSnapToGrid
+      objectReference: {fileID: 0}
+    - target: {fileID: 314283648419638785, guid: 3c63c82d67020cb40a7eb95c316fda4e, type: 3}
+      propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: ModelingSettings, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 314283648419638785, guid: 3c63c82d67020cb40a7eb95c316fda4e, type: 3}
+      propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 3226461992304410335, guid: 3c63c82d67020cb40a7eb95c316fda4e, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.0000031292439
+      objectReference: {fileID: 0}
+    - target: {fileID: 3226461992304410335, guid: 3c63c82d67020cb40a7eb95c316fda4e, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3226461992304410335, guid: 3c63c82d67020cb40a7eb95c316fda4e, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.079997614
+      objectReference: {fileID: 0}
+    - target: {fileID: 3226461992304410335, guid: 3c63c82d67020cb40a7eb95c316fda4e, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.08774791
+      objectReference: {fileID: 0}
+    - target: {fileID: 3226461992304410335, guid: 3c63c82d67020cb40a7eb95c316fda4e, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.14298148
+      objectReference: {fileID: 0}
+    - target: {fileID: 3226461992304410335, guid: 3c63c82d67020cb40a7eb95c316fda4e, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.0021049643
+      objectReference: {fileID: 0}
+    - target: {fileID: 3226461992304410335, guid: 3c63c82d67020cb40a7eb95c316fda4e, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.98582566
+      objectReference: {fileID: 0}
+    - target: {fileID: 3226461992304410335, guid: 3c63c82d67020cb40a7eb95c316fda4e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -107.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 3226461992304410335, guid: 3c63c82d67020cb40a7eb95c316fda4e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 194.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 3226461992304410335, guid: 3c63c82d67020cb40a7eb95c316fda4e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: -10
+      objectReference: {fileID: 0}
+    - target: {fileID: 4375832770436571815, guid: 3c63c82d67020cb40a7eb95c316fda4e, type: 3}
+      propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4375832770436571815, guid: 3c63c82d67020cb40a7eb95c316fda4e, type: 3}
+      propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4375832770436571815, guid: 3c63c82d67020cb40a7eb95c316fda4e, type: 3}
+      propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1698838088}
+    - target: {fileID: 4375832770436571815, guid: 3c63c82d67020cb40a7eb95c316fda4e, type: 3}
+      propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4375832770436571815, guid: 3c63c82d67020cb40a7eb95c316fda4e, type: 3}
+      propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: SetFreePlacement
+      objectReference: {fileID: 0}
+    - target: {fileID: 4375832770436571815, guid: 3c63c82d67020cb40a7eb95c316fda4e, type: 3}
+      propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: ModelingSettings, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 4375832770436571815, guid: 3c63c82d67020cb40a7eb95c316fda4e, type: 3}
+      propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 4602863311197689331, guid: 3c63c82d67020cb40a7eb95c316fda4e, type: 3}
+      propertyPath: m_Name
+      value: LeftSnapFreeMenuButtonSnap
+      objectReference: {fileID: 0}
+    - target: {fileID: 6878463156950145097, guid: 3c63c82d67020cb40a7eb95c316fda4e, type: 3}
+      propertyPath: m_Name
+      value: LeftSnapFreeMenuButtonSnapCanvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 8083861802802196941, guid: 3c63c82d67020cb40a7eb95c316fda4e, type: 3}
+      propertyPath: m_Name
+      value: LeftSnapFreeMenuButtonFreeCanvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 8917664979043651717, guid: 3c63c82d67020cb40a7eb95c316fda4e, type: 3}
+      propertyPath: m_Name
+      value: LeftSnapFreeMenuPlacement
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 3c63c82d67020cb40a7eb95c316fda4e, type: 3}
 --- !u!1 &1092956295 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4602863311197689331, guid: eb164a8f110003e48bd92f760ea48c98, type: 3}
@@ -3954,6 +4408,9 @@ MonoBehaviour:
   isToolButton: 1
   tool: 0
   toolManager: {fileID: 1928403242}
+  isPlacementModeButton: 0
+  placementMode: 0
+  modelingSettings: {fileID: 0}
 --- !u!114 &1092956298
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4593,6 +5050,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1722844120195055343, guid: 47b09cac83591f34f852a88760be03e1, type: 3}
   m_PrefabInstance: {fileID: 7533576623650314196}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &1137121020 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5561946791470195964, guid: 566be9a989f600d46916f7c4d129a026, type: 3}
+  m_PrefabInstance: {fileID: 4995200062278717601}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1155272093 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8917664979043651717, guid: f81d631bf6ae2b349914ce8514183cfa, type: 3}
@@ -4657,6 +5119,8 @@ MonoBehaviour:
   voxelModel: {fileID: 962505121}
   voxelRoot: {fileID: 258689353}
   selectionManager: {fileID: 545909709}
+  modelingSettings: {fileID: 1698838088}
+  voxelRenderer: {fileID: 1297761910}
 --- !u!114 &1189714296
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4673,6 +5137,7 @@ MonoBehaviour:
   voxelGrid: {fileID: 972695842}
   voxelModel: {fileID: 962505121}
   colorManager: {fileID: 374909674}
+  voxelRenderer: {fileID: 1297761910}
 --- !u!114 &1189714297
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4688,6 +5153,10 @@ MonoBehaviour:
   toolManager: {fileID: 1928403242}
   selectionManager: {fileID: 545909709}
   editOperations: {fileID: 254324063}
+  objectManager: {fileID: 308496275}
+  voxelGrid: {fileID: 972695842}
+  modelingSettings: {fileID: 1698838088}
+  undoRedoManager: {fileID: 783386746}
 --- !u!114 &1189714298
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4702,6 +5171,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DeleteTool
   selectionManager: {fileID: 545909709}
   editOperations: {fileID: 254324063}
+  objectManager: {fileID: 308496275}
+  groupManager: {fileID: 545909711}
+  undoRedoManager: {fileID: 783386746}
 --- !u!114 &1189714299
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4716,6 +5188,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GroupTool
   selectionManager: {fileID: 545909709}
   groupManager: {fileID: 545909711}
+  undoRedoManager: {fileID: 783386746}
 --- !u!114 &1189714300
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4730,6 +5203,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UngroupTool
   selectionManager: {fileID: 545909709}
   groupManager: {fileID: 545909711}
+  undoRedoManager: {fileID: 783386746}
 --- !u!1 &1240689852
 GameObject:
   m_ObjectHideFlags: 0
@@ -4864,6 +5338,38 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8861848601329377426, guid: d6878e1999eb4b44a9f5a263af86c185, type: 3}
   m_PrefabInstance: {fileID: 5534409079552104243}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1278960368
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1278960369}
+  m_Layer: 0
+  m_Name: LeftSnapFreeMenu
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1278960369
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1278960368}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: -0.13917309, z: 0, w: 0.9902681}
+  m_LocalPosition: {x: 0.019, y: 0.069, z: -0.09}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1386204404}
+  m_Father: {fileID: 1449942206}
+  m_LocalEulerAnglesHint: {x: 0, y: -16, z: 0}
 --- !u!4 &1295639479 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 155494062018084479, guid: f1a8aef6684608241bb032df399c74b0, type: 3}
@@ -4917,6 +5423,8 @@ MonoBehaviour:
   voxelGrid: {fileID: 972695842}
   voxelPrefab: {fileID: 5783352987793906970, guid: 37240a64b4d433e4f951dbf1127c02db, type: 3}
   voxelRoot: {fileID: 258689353}
+  voxelObject: {fileID: 962505122}
+  objectManager: {fileID: 308496275}
 --- !u!1 &1310712110
 GameObject:
   m_ObjectHideFlags: 0
@@ -5009,10 +5517,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::XRHandInput
   handSide: 0
   trackingOrigin: {fileID: 11939758}
-  indexTip: {fileID: 0}
-  thumbTip: {fileID: 0}
-  palm: {fileID: 0}
-  wrist: {fileID: 0}
+  indexTip: {fileID: 1468541027}
+  thumbTip: {fileID: 592674083}
+  palm: {fileID: 898537674}
+  wrist: {fileID: 1449942206}
   pinchStartDistance: 0.025
   pinchReleaseDistance: 0.04
 --- !u!4 &1322355432
@@ -5300,6 +5808,9 @@ MonoBehaviour:
   manipulation: {fileID: 714035509}
   toolManager: {fileID: 1928403242}
   scaleTool: {fileID: 553409159}
+  selectionManager: {fileID: 545909709}
+  modelingSettings: {fileID: 1698838088}
+  undoRedoManager: {fileID: 783386746}
   scaleThreshold: 1.5
   expandedMenus:
   - {fileID: 0}
@@ -5423,6 +5934,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1952462821}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &1386204404 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3226461992304410335, guid: 3c63c82d67020cb40a7eb95c316fda4e, type: 3}
+  m_PrefabInstance: {fileID: 1068733746}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1389252808
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5574,6 +6090,8 @@ MonoBehaviour:
   toolManager: {fileID: 1928403242}
   brushTool: {fileID: 2029536936}
   voxelGrid: {fileID: 972695842}
+  modelingSettings: {fileID: 1698838088}
+  undoRedoManager: {fileID: 783386746}
   rayOrigin: {fileID: 583695300}
   indexTip: {fileID: 440804851}
   thumbTip: {fileID: 1535857912}
@@ -5688,6 +6206,8 @@ MonoBehaviour:
   ungroupButton: {fileID: 93334939}
   hsvAddToPalette: {fileID: 1479511704}
   customPagination: {fileID: 1568924094}
+  modelingSettings: {fileID: 1698838088}
+  undoRedoManager: {fileID: 783386746}
   logActions: 1
 --- !u!1 &1448595280
 GameObject:
@@ -5736,6 +6256,7 @@ MonoBehaviour:
   toolManager: {fileID: 1928403242}
   selectionManager: {fileID: 545909709}
   editOperations: {fileID: 254324063}
+  undoRedoManager: {fileID: 783386746}
 --- !u!4 &1449942206 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8834728037239060807, guid: d6878e1999eb4b44a9f5a263af86c185, type: 3}
@@ -5875,6 +6396,8 @@ MonoBehaviour:
   toolManager: {fileID: 1928403242}
   selectionManager: {fileID: 545909709}
   editOperations: {fileID: 254324063}
+  voxelGrid: {fileID: 972695842}
+  undoRedoManager: {fileID: 783386746}
 --- !u!1 &1467872320
 GameObject:
   m_ObjectHideFlags: 0
@@ -6033,6 +6556,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SelectionHighlight
   selectionManager: {fileID: 545909709}
   voxelGrid: {fileID: 972695842}
+  voxelRenderer: {fileID: 1297761910}
   highlightColor: {r: 0.86, g: 0.17, b: 0.57, a: 1}
   lineThickness: 0.06
   outlineSize: 1.04
@@ -7016,6 +7540,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1698838087}
+  - component: {fileID: 1698838088}
   m_Layer: 0
   m_Name: ModelingSystem
   m_TagString: Untagged
@@ -7045,6 +7570,19 @@ Transform:
   - {fileID: 374909673}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1698838088
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1698838086}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 032161da37d2d3148a07fd4bf0ec8331, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ModelingSettings
+  placementMode: 0
 --- !u!114 &1712172081 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 851456306054779031, guid: a498f7dc21ac2d7429bedfd68db6da37, type: 3}
@@ -7582,6 +8120,9 @@ MonoBehaviour:
   isToolButton: 1
   tool: 2
   toolManager: {fileID: 1928403242}
+  isPlacementModeButton: 0
+  placementMode: 0
+  modelingSettings: {fileID: 0}
 --- !u!114 &1747738631
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7648,6 +8189,9 @@ MonoBehaviour:
   toolManager: {fileID: 1928403242}
   moveTool: {fileID: 1465660579}
   voxelGrid: {fileID: 972695842}
+  selectionManager: {fileID: 545909709}
+  modelingSettings: {fileID: 1698838088}
+  undoRedoManager: {fileID: 783386746}
   expandedMenus:
   - {fileID: 0}
   - {fileID: 1155272093}
@@ -7668,6 +8212,8 @@ MonoBehaviour:
   toolManager: {fileID: 1928403242}
   duplicateTool: {fileID: 1189714297}
   voxelGrid: {fileID: 972695842}
+  selectionManager: {fileID: 545909709}
+  modelingSettings: {fileID: 1698838088}
   expandedMenus:
   - {fileID: 0}
   - {fileID: 1155272093}
@@ -8255,6 +8801,11 @@ MonoBehaviour:
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
   m_Version: 2
+--- !u!4 &1948693204 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 657184242118504721, guid: d6878e1999eb4b44a9f5a263af86c185, type: 3}
+  m_PrefabInstance: {fileID: 5534409079552104243}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1952462816 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2425469361241291328, guid: d6878e1999eb4b44a9f5a263af86c185, type: 3}
@@ -8416,6 +8967,9 @@ MonoBehaviour:
   voxelRoot: {fileID: 258689353}
   previewPrefab: {fileID: 4829710089038339785, guid: f39f1b86cd25d3d4fad9703ee9fd277d, type: 3}
   colorManager: {fileID: 374909674}
+  modelingSettings: {fileID: 1698838088}
+  objectManager: {fileID: 308496275}
+  undoRedoManager: {fileID: 783386746}
   brushColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!4 &2030225654 stripped
 Transform:
@@ -8481,6 +9035,9 @@ MonoBehaviour:
   isToolButton: 1
   tool: 1
   toolManager: {fileID: 1928403242}
+  isPlacementModeButton: 0
+  placementMode: 0
+  modelingSettings: {fileID: 0}
 --- !u!114 &2094145009
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9608,6 +10165,87 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1120547869}
   m_SourcePrefab: {fileID: 100100000, guid: ed63e1282ca7ad74cad1815aa57089c1, type: 3}
+--- !u!1001 &4995200062278717601
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1348760575}
+    m_Modifications:
+    - target: {fileID: 1134805051783942180, guid: 566be9a989f600d46916f7c4d129a026, type: 3}
+      propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 783386746}
+    - target: {fileID: 1134805051783942180, guid: 566be9a989f600d46916f7c4d129a026, type: 3}
+      propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: Redo
+      objectReference: {fileID: 0}
+    - target: {fileID: 1134805051783942180, guid: 566be9a989f600d46916f7c4d129a026, type: 3}
+      propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: UndoRedoManager, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 3988281372098698370, guid: 566be9a989f600d46916f7c4d129a026, type: 3}
+      propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 783386746}
+    - target: {fileID: 3988281372098698370, guid: 566be9a989f600d46916f7c4d129a026, type: 3}
+      propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: Undo
+      objectReference: {fileID: 0}
+    - target: {fileID: 3988281372098698370, guid: 566be9a989f600d46916f7c4d129a026, type: 3}
+      propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: UndoRedoManager, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 5349586974735610928, guid: 566be9a989f600d46916f7c4d129a026, type: 3}
+      propertyPath: m_Name
+      value: RightForearmUndoRedoMenu
+      objectReference: {fileID: 0}
+    - target: {fileID: 5561946791470195964, guid: 566be9a989f600d46916f7c4d129a026, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.013
+      objectReference: {fileID: 0}
+    - target: {fileID: 5561946791470195964, guid: 566be9a989f600d46916f7c4d129a026, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.0322
+      objectReference: {fileID: 0}
+    - target: {fileID: 5561946791470195964, guid: 566be9a989f600d46916f7c4d129a026, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.0968
+      objectReference: {fileID: 0}
+    - target: {fileID: 5561946791470195964, guid: 566be9a989f600d46916f7c4d129a026, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.9929392
+      objectReference: {fileID: 0}
+    - target: {fileID: 5561946791470195964, guid: 566be9a989f600d46916f7c4d129a026, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.000000029802326
+      objectReference: {fileID: 0}
+    - target: {fileID: 5561946791470195964, guid: 566be9a989f600d46916f7c4d129a026, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.118625075
+      objectReference: {fileID: 0}
+    - target: {fileID: 5561946791470195964, guid: 566be9a989f600d46916f7c4d129a026, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.000000029802326
+      objectReference: {fileID: 0}
+    - target: {fileID: 5561946791470195964, guid: 566be9a989f600d46916f7c4d129a026, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5561946791470195964, guid: 566be9a989f600d46916f7c4d129a026, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -13.626
+      objectReference: {fileID: 0}
+    - target: {fileID: 5561946791470195964, guid: 566be9a989f600d46916f7c4d129a026, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 566be9a989f600d46916f7c4d129a026, type: 3}
 --- !u!4 &5274897583923469380
 Transform:
   m_ObjectHideFlags: 0
@@ -9853,6 +10491,9 @@ PrefabInstance:
       addedObject: {fileID: 1255820241}
     - targetCorrespondingSourceObject: {fileID: 8834728037239060807, guid: d6878e1999eb4b44a9f5a263af86c185, type: 3}
       insertIndex: -1
+      addedObject: {fileID: 1278960369}
+    - targetCorrespondingSourceObject: {fileID: 8834728037239060807, guid: d6878e1999eb4b44a9f5a263af86c185, type: 3}
+      insertIndex: -1
       addedObject: {fileID: 1527695222}
     - targetCorrespondingSourceObject: {fileID: 1078715569300777278, guid: d6878e1999eb4b44a9f5a263af86c185, type: 3}
       insertIndex: -1
@@ -9872,6 +10513,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 2339806236364360480, guid: d6878e1999eb4b44a9f5a263af86c185, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1553167621}
+    - targetCorrespondingSourceObject: {fileID: 2339806236364360480, guid: d6878e1999eb4b44a9f5a263af86c185, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1137121020}
     - targetCorrespondingSourceObject: {fileID: 3430235981092484804, guid: d6878e1999eb4b44a9f5a263af86c185, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1479511702}

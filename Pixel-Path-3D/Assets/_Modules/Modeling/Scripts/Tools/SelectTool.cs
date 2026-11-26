@@ -7,11 +7,15 @@ public class SelectTool : MonoBehaviour
     [SerializeField] private VoxelModel voxelModel;
     [SerializeField] private Transform voxelRoot;
     [SerializeField] private SelectionManager selectionManager;
+    [SerializeField] private ModelingSettings modelingSettings;
+    [SerializeField] private VoxelRenderer voxelRenderer;
 
     private Vector3Int hoveredCell;
     private bool hasHover;
-    public bool HasTarget => hasHover;
+    private VoxelObject hoveredObject;
+    public bool HasTarget => hasHover || hoveredObject != null;
     public Vector3Int TargetCell => hoveredCell;
+    public VoxelObject TargetObject => hoveredObject;
 
     public void UpdateTarget(RaycastHit hit)
     {
@@ -19,6 +23,12 @@ public class SelectTool : MonoBehaviour
 
         if (!CanUseSelect() || voxelRoot == null || hit.collider == null || !hit.collider.transform.IsChildOf(voxelRoot))
         {
+            return;
+        }
+
+        if (modelingSettings != null && modelingSettings.CurrentMode == PlacementMode.Free && voxelRenderer != null && voxelRenderer.TryGetObject(hit.collider.transform, out VoxelObject voxelObject))
+        {
+            UpdateObjectTarget(voxelObject);
             return;
         }
 
@@ -43,9 +53,18 @@ public class SelectTool : MonoBehaviour
     {
         if (!CanUseSelect()) return;
 
-        if (!hasHover)
+        if (!HasTarget)
         {
             if (!additive) selectionManager.ClearSelection();
+            return;
+        }
+
+        if (hoveredObject != null)
+        {
+            if (additive) selectionManager.ToggleSelection(hoveredObject);
+            else selectionManager.SelectOnly(hoveredObject);
+            Debug.Log($"[SelectTool] Selected objects: " + $"{selectionManager.ObjectSelectionCount}");
+
             return;
         }
 
@@ -55,9 +74,15 @@ public class SelectTool : MonoBehaviour
         Debug.Log($"[SelectTool] Selected voxels: {selectionManager.Count}");
     }
 
-    public void ClearTarget() { hasHover = false; }
+    public void ClearTarget() { hasHover = false; hoveredObject = null; }
 
     private bool CanUseSelect() { return toolManager != null && toolManager.ActiveTool == HandTool.Select && voxelGrid != null && voxelModel != null && selectionManager != null; }
 
     private void OnDisable() { ClearTarget(); }
+    public void UpdateObjectTarget(VoxelObject voxelObject)
+    {
+        ClearTarget();
+        if (!CanUseSelect() || voxelObject == null) return;
+        hoveredObject = voxelObject;
+    }
 }

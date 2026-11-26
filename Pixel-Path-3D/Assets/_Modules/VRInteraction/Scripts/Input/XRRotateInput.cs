@@ -9,8 +9,13 @@ public class XRRotateInput : MonoBehaviour
     [SerializeField] private RotateTool rotateTool;
     [SerializeField] private SelectionManager selectionManager;
     [SerializeField] private VoxelGrid voxelGrid;
+    [SerializeField] private ModelingSettings modelingSettings;
+    [SerializeField] private UndoRedoManager undoRedoManager;
 
-    [Header("Rotation")]
+    [Header("Free Rotation")]
+    [SerializeField] private Transform rightWrist;
+
+    [Header("Snap Rotation")]
     [SerializeField, Range(15f, 90f)] private float rotationThreshold = 60f;
 
     [Header("Menu Blocking")]
@@ -19,8 +24,12 @@ public class XRRotateInput : MonoBehaviour
     private bool interactionBlocked;
     private bool wasAvailable;
     private bool isRotating;
-
+    private bool freeRotating;
+    private bool ownsTransaction;
     private Vector3 referenceDirection;
+    private Quaternion lastHandRotation;
+    private UndoRedoManager.ObjectTransformSnapshot transformBefore;
+    private bool IsFreeObjectSelection => modelingSettings != null && modelingSettings.CurrentMode == PlacementMode.Free && selectionManager != null && selectionManager.ObjectSelectionCount > 0 && selectionManager.Count == 0;
 
     private void Start()
     {
@@ -50,6 +59,42 @@ public class XRRotateInput : MonoBehaviour
 
         wasAvailable = true;
 
+        if (IsFreeObjectSelection) UpdateFreeRotation();
+        else UpdateSnapRotation();
+    }
+
+    private void UpdateFreeRotation()
+    {
+        XRHandInput hand = coordinator.RightHand;
+
+        if (rightWrist == null || !hand.IsTracked || !hand.IsPinching) { ResetRotation(); return; }
+        if (!isRotating || !freeRotating)
+        {
+            if (!hand.PinchStarted) return;
+
+            ResetRotation();
+            lastHandRotation = rightWrist.rotation;
+            isRotating = true;
+            freeRotating = true;
+            CaptureHistory();
+            return;
+        }
+
+        Quaternion currentRotation = rightWrist.rotation;
+        Quaternion delta = currentRotation * Quaternion.Inverse(lastHandRotation);
+
+        delta.ToAngleAxis(out float angle, out Vector3 axis);
+
+        if (angle > 180f) angle -= 360f;
+        if (Mathf.Abs(angle) < 0.05f || axis.sqrMagnitude < 0.000001f) return;
+        if (Mathf.Abs(angle) > 45f) { lastHandRotation = currentRotation; return; }
+        if (rotateTool.RotateBy(axis, angle)) lastHandRotation = currentRotation;
+    }
+
+    private void UpdateSnapRotation()
+    {
+        if (freeRotating) ResetRotation();
+
         if (!coordinator.BothHandsPinching)
         {
             if (isRotating) coordinator.RequireFreshPinch();
@@ -66,14 +111,10 @@ public class XRRotateInput : MonoBehaviour
         {
             referenceDirection = direction;
             isRotating = true;
+            CaptureHistory();
             return;
         }
 
-        UpdateRotation(direction);
-    }
-
-    private void UpdateRotation(Vector3 direction)
-    {
         Quaternion rotation = Quaternion.FromToRotation(referenceDirection, direction);
         rotation.ToAngleAxis(out float angle, out Vector3 worldAxis);
 
@@ -99,11 +140,43 @@ public class XRRotateInput : MonoBehaviour
         if (rotateTool.RotateAroundSelectionMin(axis, clockwise))
         {
             referenceDirection = direction;
-            Debug.Log($"[XRRotateInput] Rotated around axis {axis}.", this);
+            Debug.Log($"[XRRotateInput] Snap rotation axis {axis}.", this);
         }
     }
 
-    private void ResetRotation() { isRotating = false; }
+    private void CaptureHistory()
+    {
+        BeginHistoryTransaction();
+        transformBefore = undoRedoManager != null && selectionManager != null && selectionManager.ObjectSelectionCount > 0 && selectionManager.Count == 0 ? undoRedoManager.CaptureObjectTransforms(selectionManager.SelectedObjects) : null;
+    }
+
+    private void BeginHistoryTransaction()
+    {
+        if (undoRedoManager == null || undoRedoManager.IsTransactionActive) return;
+        undoRedoManager.BeginTransaction();
+        ownsTransaction = undoRedoManager.IsTransactionActive;
+    }
+
+    private void FinishHistory()
+    {
+        if (transformBefore != null && undoRedoManager != null) undoRedoManager.RecordObjectTransforms(transformBefore);
+        transformBefore = null;
+        EndHistoryTransaction();
+    }
+
+    private void EndHistoryTransaction()
+    {
+        if (!ownsTransaction) return;
+        ownsTransaction = false;
+        if (undoRedoManager != null) undoRedoManager.EndTransaction();
+    }
+
+    private void ResetRotation()
+    {
+        FinishHistory();
+        isRotating = false;
+        freeRotating = false;
+    }
 
     private bool IsMenuOpen()
     {

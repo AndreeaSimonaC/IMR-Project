@@ -19,7 +19,10 @@ public class XRButtonVisualFeedback : MonoBehaviour
     [SerializeField] private bool isToolButton = false;
     [SerializeField] private HandTool tool;
     [SerializeField] private ToolManager toolManager;
-
+    [Header("Placement Mode")]
+    [SerializeField] private bool isPlacementModeButton = false;
+    [SerializeField] private PlacementMode placementMode;
+    [SerializeField] private ModelingSettings modelingSettings;
     private XRSimpleInteractable interactable;
     private MaterialPropertyBlock block;
     private bool pressed;
@@ -57,7 +60,15 @@ public class XRButtonVisualFeedback : MonoBehaviour
                 OnToolChanged(toolManager.ActiveTool);
             }
         }
-
+        if (isPlacementModeButton)
+        {
+            if (modelingSettings == null) modelingSettings = FindFirstObjectByType<ModelingSettings>();
+            if (modelingSettings != null)
+            {
+                modelingSettings.OnPlacementModeChanged += OnPlacementModeChanged;
+                OnPlacementModeChanged(modelingSettings.CurrentMode);
+            }
+        }
         RefreshVisual();
     }
 
@@ -70,7 +81,7 @@ public class XRButtonVisualFeedback : MonoBehaviour
 
         if (menuController != null) menuController.OnTabChanged -= OnTabChanged;
         if (toolManager != null) toolManager.OnToolChanged -= OnToolChanged;
-
+        if (modelingSettings != null) modelingSettings.OnPlacementModeChanged -= OnPlacementModeChanged;
         pressed = false;
     }
 
@@ -103,10 +114,10 @@ public class XRButtonVisualFeedback : MonoBehaviour
 
         RefreshVisual();
     }
-
+    private void OnPlacementModeChanged(PlacementMode newMode) { active = newMode == placementMode; RefreshVisual(); }
     private void RefreshVisual()
     {
-        if (menuTab != PalmMenuTab.None || isToolButton)
+        if (menuTab != PalmMenuTab.None || isToolButton || isPlacementModeButton)
         {
             if (active) SetOutlineColor(pressedColor);
             else if (interactable != null && interactable.isHovered) SetOutlineColor(hoverColor);

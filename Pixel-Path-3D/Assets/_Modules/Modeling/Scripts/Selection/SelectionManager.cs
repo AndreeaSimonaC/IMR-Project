@@ -8,9 +8,12 @@ public class SelectionManager : MonoBehaviour
     [SerializeField] private ToolManager toolManager;
     [SerializeField] private VoxelGroupManager groupManager;
     private readonly HashSet<Vector3Int> selected = new();
+    private readonly HashSet<VoxelObject> selectedObjects = new();
     public IReadOnlyCollection<Vector3Int> Selected => selected;
-    public bool HasSelection => selected.Count > 0;
+    public IReadOnlyCollection<VoxelObject> SelectedObjects => selectedObjects;
+    public bool HasSelection => selected.Count > 0 || selectedObjects.Count > 0;
     public int Count => selected.Count;
+    public int ObjectSelectionCount => selectedObjects.Count;
     public event Action OnSelectionChanged;
 
     private void HandleToolChanged(HandTool newTool)
@@ -27,7 +30,7 @@ public class SelectionManager : MonoBehaviour
         if (voxelModel != null)
         {
             voxelModel.OnVoxelRemoved += HandleVoxelRemoved;
-            voxelModel.OnModelCleared += ClearSelection;
+            voxelModel.OnModelCleared += ClearGridSelection;
         }
         else
         {
@@ -42,7 +45,7 @@ public class SelectionManager : MonoBehaviour
         if (voxelModel != null)
         {
             voxelModel.OnVoxelRemoved -= HandleVoxelRemoved;
-            voxelModel.OnModelCleared -= ClearSelection;
+            voxelModel.OnModelCleared -= ClearGridSelection;
         }
 
         if (toolManager != null) toolManager.OnToolChanged -= HandleToolChanged;
@@ -62,9 +65,10 @@ public class SelectionManager : MonoBehaviour
     public void SelectOnly(Vector3Int cell)
     {
         if (!CanSelect(cell)) return;
-        if (selected.Count == 1 && selected.Contains(cell)) return;
+        if (selected.Count == 1 && selected.Contains(cell) && selectedObjects.Count == 0) return;
 
         selected.Clear();
+        selectedObjects.Clear();
         selected.Add(cell);
         OnSelectionChanged?.Invoke();
     }
@@ -119,18 +123,20 @@ public class SelectionManager : MonoBehaviour
             if (CanSelect(cell)) replacement.Add(cell);
         }
 
-        if (selected.SetEquals(replacement)) return;
+        if (selected.SetEquals(replacement) && selectedObjects.Count == 0) return;
 
         selected.Clear();
+        selectedObjects.Clear();
         selected.UnionWith(replacement);
         OnSelectionChanged?.Invoke();
     }
 
     public void ClearSelection()
     {
-        if (selected.Count == 0) return;
+        if (selected.Count == 0 && selectedObjects.Count == 0) return;
 
         selected.Clear();
+        selectedObjects.Clear();
         OnSelectionChanged?.Invoke();
     }
 
@@ -143,12 +149,98 @@ public class SelectionManager : MonoBehaviour
     [ContextMenu("Debug Selection")]
     private void DebugSelection()
     {
-        Debug.Log($"[SelectionManager] Selected voxels: {Count}");
+        Debug.Log($"[SelectionManager] Selected voxels: {Count}, " + $"selected objects: {ObjectSelectionCount}");
 
         foreach (Vector3Int cell in selected)
         {
             Debug.Log($"[SelectionManager] Selected cell: {cell}");
         }
+
+        foreach (VoxelObject voxelObject in selectedObjects)
+        {
+            if (voxelObject != null) { Debug.Log($"[SelectionManager] Selected object: " + $"{voxelObject.name}"); }
+        }
     }
 
+    private void ClearGridSelection()
+    {
+        if (selected.Count == 0) return;
+        selected.Clear();
+        OnSelectionChanged?.Invoke();
+    }
+    public bool IsSelected(VoxelObject voxelObject)
+    {
+        return voxelObject != null && selectedObjects.Contains(voxelObject);
+    }
+
+    private HashSet<VoxelObject> GetObjectMembers(VoxelObject voxelObject)
+    {
+        var result = new HashSet<VoxelObject>();
+        if (voxelObject == null) return result;
+        if (groupManager != null && groupManager.TryGetGroupObjects(voxelObject, out IReadOnlyCollection<VoxelObject> members))
+        {
+            foreach (VoxelObject member in members) { if (member != null) result.Add(member); }
+        }
+        else { result.Add(voxelObject); }
+
+        return result;
+    }
+
+    public void SelectOnly(VoxelObject voxelObject)
+    {
+        if (voxelObject == null) return;
+        HashSet<VoxelObject> members = GetObjectMembers(voxelObject);
+        if (selected.Count == 0 && selectedObjects.SetEquals(members)) return;
+
+        selected.Clear();
+        selectedObjects.Clear();
+        selectedObjects.UnionWith(members);
+
+        OnSelectionChanged?.Invoke();
+    }
+
+    public void AddToSelection(VoxelObject voxelObject)
+    {
+        if (voxelObject == null) return;
+        HashSet<VoxelObject> members = GetObjectMembers(voxelObject);
+        int before = selectedObjects.Count;
+        selectedObjects.UnionWith(members);
+
+        if (selectedObjects.Count != before) OnSelectionChanged?.Invoke();
+    }
+
+    public void RemoveFromSelection(VoxelObject voxelObject)
+    {
+        if (voxelObject != null && selectedObjects.Remove(voxelObject)) OnSelectionChanged?.Invoke();
+    }
+
+    public void ToggleSelection(VoxelObject voxelObject)
+    {
+        if (voxelObject == null) return;
+        HashSet<VoxelObject> members = GetObjectMembers(voxelObject);
+        bool entireGroupSelected = selectedObjects.IsSupersetOf(members);
+
+        if (entireGroupSelected) { selectedObjects.ExceptWith(members); }
+        else { selectedObjects.UnionWith(members); }
+
+        OnSelectionChanged?.Invoke();
+    }
+
+    public void ReplaceObjectSelection(IEnumerable<VoxelObject> objects)
+    {
+        if (objects == null) return;
+        var replacement = new HashSet<VoxelObject>();
+        foreach (VoxelObject voxelObject in objects)
+        {
+            if (voxelObject == null) continue;
+            replacement.UnionWith(GetObjectMembers(voxelObject));
+        }
+
+        if (selectedObjects.SetEquals(replacement) && selected.Count == 0) return;
+
+        selected.Clear();
+        selectedObjects.Clear();
+        selectedObjects.UnionWith(replacement);
+        OnSelectionChanged?.Invoke();
+    }
 }
