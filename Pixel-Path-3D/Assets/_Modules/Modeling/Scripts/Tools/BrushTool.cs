@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class BrushTool : MonoBehaviour
@@ -12,6 +13,7 @@ public class BrushTool : MonoBehaviour
     [SerializeField] private ColorPaletteManager colorManager;
     [SerializeField] private ModelingSettings modelingSettings;
     [SerializeField] private VoxelObjectManager objectManager;
+    [SerializeField] private UndoRedoManager undoRedoManager;
 
     [Header("Brush Settings")]
     [SerializeField] private Color brushColor = Color.white;
@@ -171,6 +173,28 @@ public class BrushTool : MonoBehaviour
                 Debug.LogWarning("BrushTool: Failed to add voxel to new object.", this);
                 return;
             }
+            if (undoRedoManager != null)
+            {
+                VoxelObject createdObject = newObject;
+                VoxelObjectManager manager = objectManager;
+                undoRedoManager.RecordAction(
+                    undo: () =>
+                    {
+                        if (createdObject == null || !manager.UnregisterObject(createdObject)) throw new InvalidOperationException("Cannot undo Free voxel creation.");
+                        createdObject.gameObject.SetActive(false);
+                    },
+                    redo: () =>
+                    {
+                        if (createdObject == null) throw new InvalidOperationException("Cannot redo Free voxel creation.");
+                        createdObject.gameObject.SetActive(true);
+                        if (!manager.RegisterObject(createdObject))
+                        {
+                            createdObject.gameObject.SetActive(false);
+                            throw new InvalidOperationException("Cannot register Free voxel object.");
+                        }
+                    }
+                );
+            }
             Debug.Log($"BRUSH FREE: Placed voxel at {freeTargetWorld} | " + $"Color: {color}", this);
             ClearTarget();
             return;
@@ -181,7 +205,22 @@ public class BrushTool : MonoBehaviour
 
         bool placed = voxelModel.AddVoxel(targetCell, color);
 
-        if (placed) { Debug.Log($"BRUSH: Placed voxel at {targetCell} | Color: {color}", this); ClearTarget(); }
+        if (placed)
+        {
+            if (undoRedoManager != null)
+            {
+                Vector3Int cell = targetCell;
+                VoxelModel model = voxelModel;
+
+                undoRedoManager.RecordAction(
+                    undo: () => { if (model == null || !model.RemoveVoxel(cell)) throw new InvalidOperationException($"Cannot undo voxel placement at {cell}."); },
+                    redo: () => { if (model == null || !model.AddVoxel(cell, color)) throw new InvalidOperationException($"Cannot redo voxel placement at {cell}."); }
+                );
+            }
+
+            Debug.Log($"BRUSH: Placed voxel at {targetCell} | Color: {color}", this);
+            ClearTarget();
+        }
         else { Debug.LogWarning($"BrushTool: Placement failed at {targetCell}", this); }
     }
 

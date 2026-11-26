@@ -10,6 +10,7 @@ public class XRBrushInput : MonoBehaviour
     [SerializeField] private BrushTool brushTool;
     [SerializeField] private VoxelGrid voxelGrid;
     [SerializeField] private ModelingSettings modelingSettings;
+    [SerializeField] private UndoRedoManager undoRedoManager;
 
     [Header("Right Hand")]
     [SerializeField] private Transform rayOrigin;
@@ -43,6 +44,7 @@ public class XRBrushInput : MonoBehaviour
     private bool interactionBlocked;
     private bool strokeReady;
     private bool strokeActive;
+    private bool ownsTransaction;
     private Vector3Int lastStrokeCell;
     private bool IsFreeMode => modelingSettings != null && modelingSettings.CurrentMode == PlacementMode.Free;
 
@@ -63,7 +65,6 @@ public class XRBrushInput : MonoBehaviour
         }
 
         SubsystemManager.GetSubsystems(handSubsystems);
-
         foreach (XRHandSubsystem subsystem in handSubsystems) { if (subsystem.running) { handSubsystem = subsystem; break; } }
         workingHeight = Mathf.Clamp(workingHeight, 0, ProjectSettings.Height - 1);
         Debug.Log("XRBrushInput: Initialized.", this);
@@ -82,7 +83,6 @@ public class XRBrushInput : MonoBehaviour
     private void PaintBetween(Vector3Int from, Vector3Int to)
     {
         Vector3Int difference = to - from;
-
         int steps = Mathf.Max(Mathf.Abs(difference.x), Mathf.Abs(difference.y), Mathf.Abs(difference.z));
         if (steps == 0) return;
 
@@ -94,7 +94,26 @@ public class XRBrushInput : MonoBehaviour
         }
     }
 
-    private void ResetStroke() { strokeReady = false; strokeActive = false; }
+    private void BeginHistory()
+    {
+        if (undoRedoManager == null || undoRedoManager.IsTransactionActive) return;
+        undoRedoManager.BeginTransaction();
+        ownsTransaction = undoRedoManager.IsTransactionActive;
+    }
+
+    private void FinishHistory()
+    {
+        if (!ownsTransaction) return;
+        ownsTransaction = false;
+        if (undoRedoManager != null) undoRedoManager.EndTransaction();
+    }
+
+    private void ResetStroke()
+    {
+        FinishHistory();
+        strokeReady = false;
+        strokeActive = false;
+    }
 
     private void Update()
     {
@@ -118,7 +137,14 @@ public class XRBrushInput : MonoBehaviour
             return;
         }
 
-        if (!isPinching) { strokeReady = true; strokeActive = false; }
+        if (!isPinching)
+        {
+            FinishHistory();
+            strokeReady = true;
+            strokeActive = false;
+        }
+
+        if (pinchStarted && strokeReady) BeginHistory();
 
         if (directPainting)
         {
@@ -135,10 +161,7 @@ public class XRBrushInput : MonoBehaviour
                     else if (cell != lastStrokeCell) { PaintBetween(lastStrokeCell, cell); lastStrokeCell = cell; }
                     UpdateDirectTarget();
                 }
-                else
-                {
-                    strokeActive = false;
-                }
+                else { strokeActive = false; }
             }
         }
         else
@@ -176,9 +199,7 @@ public class XRBrushInput : MonoBehaviour
     private void UpdateWorkingLayerTarget(Ray ray)
     {
         float height = (workingHeight + 0.5f) * voxelGrid.VoxelSize;
-
         Vector3 center = voxelGrid.transform.TransformPoint(new Vector3(0f, height, 0f));
-
         Plane plane = new Plane(voxelGrid.transform.up, center);
 
         if (plane.Raycast(ray, out float distance) && distance >= 0f && distance <= maxDistance)
@@ -197,7 +218,13 @@ public class XRBrushInput : MonoBehaviour
         return false;
     }
 
-    public void SetInteractionBlocked(bool blocked) { interactionBlocked = blocked; brushTool.ClearTarget(); }
+    public void SetInteractionBlocked(bool blocked)
+    {
+        if (blocked) ResetStroke();
+        interactionBlocked = blocked;
+        brushTool.ClearTarget();
+    }
+
     public void SetWorkingLayerMode(bool enabled) { workingLayerMode = enabled; brushTool.ClearTarget(); }
 
     public void SetWorkingHeight(int height)

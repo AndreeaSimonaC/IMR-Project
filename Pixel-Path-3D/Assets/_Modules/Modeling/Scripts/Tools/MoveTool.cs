@@ -6,7 +6,7 @@ public class MoveTool : MonoBehaviour
     [SerializeField] private SelectionManager selectionManager;
     [SerializeField] private VoxelEditOperations editOperations;
     [SerializeField] private VoxelGrid voxelGrid;
-
+    [SerializeField] private UndoRedoManager undoRedoManager;
     public bool HasSelection => selectionManager != null && selectionManager.HasSelection;
 
     private bool CanUseMove()
@@ -34,11 +34,19 @@ public class MoveTool : MonoBehaviour
     public bool MoveDown() => MoveBy(Vector3Int.down);
     public bool MoveForward() => MoveBy(Vector3Int.forward);
     public bool MoveBackward() => MoveBy(Vector3Int.back);
-    public bool MoveObjectsBy(Vector3 worldDelta)
+
+    public bool MoveObjectsBy(Vector3 worldDelta, bool recordHistory = false)
     {
         if (!CanUseMove() || selectionManager.ObjectSelectionCount == 0 || selectionManager.Count > 0) return false;
+        var before = recordHistory && undoRedoManager != null ? undoRedoManager.CaptureObjectTransforms(selectionManager.SelectedObjects) : null;
         bool moved = editOperations.MoveSelectedObjects(worldDelta);
-        if (moved) { Debug.Log($"[MoveTool] Moved " + $"{selectionManager.ObjectSelectionCount} object(s).", this); }
+
+        if (moved)
+        {
+            if (before != null) undoRedoManager.RecordObjectTransforms(before);
+            Debug.Log($"[MoveTool] Moved " + $"{selectionManager.ObjectSelectionCount} object(s).", this);
+        }
+
         return moved;
     }
 }

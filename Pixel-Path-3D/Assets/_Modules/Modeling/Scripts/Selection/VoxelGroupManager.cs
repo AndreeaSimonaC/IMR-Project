@@ -174,6 +174,56 @@ public class VoxelGroupManager : MonoBehaviour
             objectGroups.Remove(id);
         }
     }
+    public class GroupStateSnapshot
+    {
+        internal readonly Dictionary<int, HashSet<Vector3Int>> CellGroups = new();
+        internal readonly Dictionary<int, HashSet<VoxelObject>> ObjectGroups = new();
+        internal int NextCellId;
+        internal int NextObjectId;
+    }
+    public GroupStateSnapshot CaptureState()
+    {
+        var state = new GroupStateSnapshot();
+        foreach (var group in groups) state.CellGroups.Add(group.Key, new HashSet<Vector3Int>(group.Value));
+        foreach (var group in objectGroups) state.ObjectGroups.Add(group.Key, new HashSet<VoxelObject>(group.Value));
+        state.NextCellId = nextGroupId;
+        state.NextObjectId = nextObjectGroupId;
+        return state;
+    }
+    public void RestoreState(GroupStateSnapshot state)
+    {
+        if (state == null) return;
+
+        foreach (var group in state.CellGroups.Values)
+        {
+            foreach (Vector3Int cell in group) { if (voxelModel == null || !voxelModel.HasVoxel(cell)) throw new System.InvalidOperationException($"Cannot restore group: missing voxel {cell}."); }
+        }
+
+        foreach (var group in state.ObjectGroups.Values)
+        {
+            foreach (VoxelObject obj in group) { if (obj == null || !obj.gameObject.activeInHierarchy) throw new System.InvalidOperationException("Cannot restore group: missing Free object."); }
+        }
+
+        groups.Clear();
+        cellToGroup.Clear();
+        objectGroups.Clear();
+        objectToGroup.Clear();
+
+        foreach (var group in state.CellGroups)
+        {
+            groups.Add(group.Key, new HashSet<Vector3Int>(group.Value));
+            foreach (Vector3Int cell in group.Value) cellToGroup.Add(cell, group.Key);
+        }
+
+        foreach (var group in state.ObjectGroups)
+        {
+            objectGroups.Add(group.Key, new HashSet<VoxelObject>(group.Value));
+            foreach (VoxelObject obj in group.Value) objectToGroup.Add(obj, group.Key);
+        }
+
+        nextGroupId = state.NextCellId;
+        nextObjectGroupId = state.NextObjectId;
+    }
 
     public void ClearAllGroups()
     {

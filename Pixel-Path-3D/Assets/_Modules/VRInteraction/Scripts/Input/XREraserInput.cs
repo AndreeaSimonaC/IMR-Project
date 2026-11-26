@@ -21,11 +21,13 @@ public class XREraserInput : MonoBehaviour
     [Header("Menu Blocking")]
     [SerializeField] private GameObject[] expandedMenus;
     [SerializeField] private VoxelModel defaultVoxelModel;
+    [SerializeField] private UndoRedoManager undoRedoManager;
 
     private bool interactionBlocked;
     private bool wasAvailable;
     private bool strokeActive;
     private bool erasedFreeThisPinch;
+    private bool ownsTransaction;
     private Vector3Int lastStrokeCell;
 
     private void Start()
@@ -39,11 +41,23 @@ public class XREraserInput : MonoBehaviour
         coordinator.RequireFreshPinch();
         Debug.Log("XREraserInput: Initialized.", this);
     }
+    private void BeginHistory()
+    {
+        if (undoRedoManager == null || undoRedoManager.IsTransactionActive) return;
+        undoRedoManager.BeginTransaction();
+        ownsTransaction = undoRedoManager.IsTransactionActive;
+    }
+
+    private void FinishHistory()
+    {
+        if (!ownsTransaction) return;
+        ownsTransaction = false;
+        if (undoRedoManager != null) undoRedoManager.EndTransaction();
+    }
 
     private void Update()
     {
         XRHandInput hand = coordinator.RightHand;
-
         bool available = hand.IsTracked && toolManager.ActiveTool == HandTool.Eraser && !interactionBlocked && !coordinator.IsMenuOpen && !IsMenuOpen();
 
         if (!available)
@@ -57,10 +71,11 @@ public class XREraserInput : MonoBehaviour
         }
 
         wasAvailable = true;
+        if (!hand.IsPinching) ResetStroke();
+        else if (hand.PinchStarted) BeginHistory();
 
         if (directErasing)
         {
-            if (!hand.IsPinching) ResetStroke();
             if (TryEraseFreeObject(hand.IndexTipPosition, hand.IsPinching)) { ResetCellStroke(); return; }
             Vector3Int cell = voxelGrid.WorldToVoxel(hand.IndexTipPosition);
             bool inside = voxelGrid.IsInsideGrid(cell);
@@ -117,7 +132,6 @@ public class XREraserInput : MonoBehaviour
     {
         if (expandedMenus == null) return false;
         foreach (GameObject menu in expandedMenus) { if (menu != null && menu.activeInHierarchy) return true; }
-
         return false;
     }
 
@@ -143,7 +157,12 @@ public class XREraserInput : MonoBehaviour
         eraserTool?.ClearTarget();
     }
 
-    private void ResetStroke() { strokeActive = false; erasedFreeThisPinch = false; }
+    private void ResetStroke()
+    {
+        FinishHistory();
+        strokeActive = false;
+        erasedFreeThisPinch = false;
+    }
 
     private void OnDisable()
     {
@@ -168,7 +187,6 @@ public class XREraserInput : MonoBehaviour
             if (obj.Model == defaultVoxelModel) continue;
 
             float distance = (hit.ClosestPoint(fingerPosition) - fingerPosition).sqrMagnitude;
-
             if (distance < closestDistance) { closestDistance = distance; closestObject = obj; }
         }
 

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,6 +11,7 @@ public class DuplicateTool : MonoBehaviour
     [SerializeField] private VoxelObjectManager objectManager;
     [SerializeField] private VoxelGrid voxelGrid;
     [SerializeField] private ModelingSettings modelingSettings;
+    [SerializeField] private UndoRedoManager undoRedoManager;
 
     public bool HasSelection => selectionManager != null && selectionManager.HasSelection;
 
@@ -64,8 +66,42 @@ public class DuplicateTool : MonoBehaviour
 
         if (duplicates.Count == 0) return false;
         selectionManager.ReplaceObjectSelection(duplicates);
-        Debug.Log($"[DuplicateTool] Duplicated {duplicates.Count} object(s).", this);
 
+        if (undoRedoManager != null)
+        {
+            VoxelObjectManager manager = objectManager;
+            SelectionManager selection = selectionManager;
+            var savedSources = new List<VoxelObject>(sources);
+            var savedDuplicates = new List<VoxelObject>(duplicates);
+
+            undoRedoManager.RecordAction(
+                undo: () =>
+                {
+                    foreach (VoxelObject obj in savedDuplicates)
+                    {
+                        if (obj == null || !manager.UnregisterObject(obj)) throw new InvalidOperationException("Cannot undo Free duplication.");
+                        obj.gameObject.SetActive(false);
+                    }
+
+                    if (selection != null) selection.ReplaceObjectSelection(savedSources);
+                },
+                redo: () =>
+                {
+                    foreach (VoxelObject obj in savedDuplicates)
+                    {
+                        if (obj == null) throw new InvalidOperationException("Cannot redo Free duplication.");
+                        obj.gameObject.SetActive(true);
+                        if (!manager.RegisterObject(obj))
+                        {
+                            obj.gameObject.SetActive(false);
+                            throw new InvalidOperationException("Cannot restore duplicated object.");
+                        }
+                    }
+                    if (selection != null) selection.ReplaceObjectSelection(savedDuplicates);
+                }
+            );
+        }
+        Debug.Log($"[DuplicateTool] Duplicated {duplicates.Count} object(s).", this);
         return true;
     }
 }

@@ -10,6 +10,7 @@ public class XRMoveInput : MonoBehaviour
     [SerializeField] private VoxelGrid voxelGrid;
     [SerializeField] private SelectionManager selectionManager;
     [SerializeField] private ModelingSettings modelingSettings;
+    [SerializeField] private UndoRedoManager undoRedoManager;
 
     [Header("Menu Blocking")]
     [SerializeField] private GameObject[] expandedMenus;
@@ -23,6 +24,8 @@ public class XRMoveInput : MonoBehaviour
     private Vector3Int appliedDelta;
     private Vector3 appliedWorldDelta;
     private bool freeDrag;
+    private bool ownsTransaction;
+    private UndoRedoManager.ObjectTransformSnapshot transformBefore;
 
     private void Start()
     {
@@ -98,6 +101,8 @@ public class XRMoveInput : MonoBehaviour
         appliedDelta = Vector3Int.zero;
         appliedWorldDelta = Vector3.zero;
         freeDrag = modelingSettings != null && modelingSettings.CurrentMode == PlacementMode.Free && selectionManager != null && selectionManager.ObjectSelectionCount > 0 && selectionManager.Count == 0;
+        BeginHistoryTransaction();
+        transformBefore = undoRedoManager != null && selectionManager != null && selectionManager.ObjectSelectionCount > 0 && selectionManager.Count == 0 ? undoRedoManager.CaptureObjectTransforms(selectionManager.SelectedObjects) : null;
     }
 
     private void UpdateDrag()
@@ -119,9 +124,33 @@ public class XRMoveInput : MonoBehaviour
         if (snapStep == Vector3Int.zero) return;
         if (moveTool.MoveBy(snapStep)) appliedDelta = targetDelta;
     }
+    private void BeginHistoryTransaction()
+    {
+        if (undoRedoManager == null || undoRedoManager.IsTransactionActive) return;
+
+        undoRedoManager.BeginTransaction();
+        ownsTransaction = undoRedoManager.IsTransactionActive;
+    }
+
+    private void FinishHistory()
+    {
+        if (transformBefore != null && undoRedoManager != null)
+            undoRedoManager.RecordObjectTransforms(transformBefore);
+
+        transformBefore = null;
+        EndHistoryTransaction();
+    }
+
+    private void EndHistoryTransaction()
+    {
+        if (!ownsTransaction) return;
+        ownsTransaction = false;
+        if (undoRedoManager != null) undoRedoManager.EndTransaction();
+    }
 
     private void EndDrag()
     {
+        FinishHistory();
         dragMode = DragMode.None;
         waitForRelease = true;
         coordinator.RequireFreshPinch();
@@ -129,6 +158,7 @@ public class XRMoveInput : MonoBehaviour
 
     private void ResetDrag()
     {
+        FinishHistory();
         dragMode = DragMode.None;
         appliedDelta = Vector3Int.zero;
         appliedWorldDelta = Vector3.zero;

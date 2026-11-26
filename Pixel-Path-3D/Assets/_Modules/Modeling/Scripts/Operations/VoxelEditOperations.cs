@@ -9,7 +9,7 @@ public class VoxelEditOperations : MonoBehaviour
     [SerializeField] private SelectionManager selectionManager;
     [SerializeField] private VoxelGroupManager groupManager;
     [SerializeField] private ModelingSettings modelingSettings;
-
+    [SerializeField] private UndoRedoManager undoRedoManager;
     private const int MaxScaledVoxels = 4096;
 
     private bool Ready => voxelModel != null && voxelGrid != null && selectionManager != null;
@@ -18,8 +18,17 @@ public class VoxelEditOperations : MonoBehaviour
     public bool EraseCell(Vector3Int cell)
     {
         if (!Ready || !voxelGrid.IsInsideGrid(cell)) return false;
+        if (!voxelModel.HasVoxel(cell)) return false;
+        var before = undoRedoManager != null ? undoRedoManager.CaptureVoxelState(voxelModel) : null;
+        var beforeGroups = before != null && groupManager != null ? groupManager.CaptureState() : null;
         bool erased = voxelModel.RemoveVoxel(cell);
-        if (erased) { selectionManager.RemoveFromSelection(cell); Debug.Log($"[VoxelEditOperations] Erased voxel {cell}"); }
+
+        if (erased)
+        {
+            if (before != null) undoRedoManager.RecordVoxelChanges(before, groupManager, beforeGroups);
+            selectionManager.RemoveFromSelection(cell);
+            Debug.Log($"[VoxelEditOperations] Erased voxel {cell}");
+        }
 
         return erased;
     }
@@ -29,12 +38,17 @@ public class VoxelEditOperations : MonoBehaviour
         if (!Ready || selectionManager.Count == 0) return false;
 
         var cells = new List<Vector3Int>(selectionManager.Selected);
+        var before = undoRedoManager != null ? undoRedoManager.CaptureVoxelState(voxelModel) : null;
+        var beforeGroups = before != null && groupManager != null ? groupManager.CaptureState() : null;
         bool any = false;
         foreach (Vector3Int cell in cells) any |= voxelModel.RemoveVoxel(cell);
-
         foreach (Vector3Int cell in cells) selectionManager.RemoveFromSelection(cell);
 
-        if (any) Debug.Log($"[VoxelEditOperations] Erased {cells.Count} voxels.");
+        if (any)
+        {
+            if (before != null) undoRedoManager.RecordVoxelChanges(before, groupManager, beforeGroups);
+            Debug.Log($"[VoxelEditOperations] Erased {cells.Count} voxels.");
+        }
 
         return any;
     }
@@ -108,7 +122,10 @@ public class VoxelEditOperations : MonoBehaviour
                 }
             }
         }
+        var before = undoRedoManager != null ? undoRedoManager.CaptureVoxelState(voxelModel) : null;
+        var beforeGroups = before != null && groupManager != null ? groupManager.CaptureState() : null;
         ApplyReplacement(source, destination, destinationsBySource);
+        if (before != null) undoRedoManager.RecordVoxelChanges(before, groupManager, beforeGroups);
         Debug.Log($"[VoxelEditOperations] Scaled {source.Count} into " + $"{destination.Count} voxels.");
 
         return true;
@@ -161,7 +178,8 @@ public class VoxelEditOperations : MonoBehaviour
 
             destination.Add(target, entry.Value);
         }
-
+        var before = undoRedoManager != null ? undoRedoManager.CaptureVoxelState(voxelModel) : null;
+        var beforeGroups = before != null && groupManager != null ? groupManager.CaptureState() : null;
         if (duplicate)
         {
             foreach (var entry in destination) voxelModel.AddVoxel(entry.Key, entry.Value);
@@ -173,7 +191,7 @@ public class VoxelEditOperations : MonoBehaviour
             foreach (Vector3Int cell in source.Keys) destinationsBySource[cell] = new List<Vector3Int> { map(cell) };
             ApplyReplacement(source, destination, destinationsBySource);
         }
-
+        if (before != null) undoRedoManager.RecordVoxelChanges(before, groupManager, beforeGroups);
         Debug.Log($"[VoxelEditOperations] {(duplicate ? "Duplicated" : "Transformed")} {source.Count} voxels.");
         return true;
     }

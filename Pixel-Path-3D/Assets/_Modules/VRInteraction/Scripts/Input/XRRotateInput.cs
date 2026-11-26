@@ -10,6 +10,7 @@ public class XRRotateInput : MonoBehaviour
     [SerializeField] private SelectionManager selectionManager;
     [SerializeField] private VoxelGrid voxelGrid;
     [SerializeField] private ModelingSettings modelingSettings;
+    [SerializeField] private UndoRedoManager undoRedoManager;
 
     [Header("Free Rotation")]
     [SerializeField] private Transform rightWrist;
@@ -24,8 +25,10 @@ public class XRRotateInput : MonoBehaviour
     private bool wasAvailable;
     private bool isRotating;
     private bool freeRotating;
+    private bool ownsTransaction;
     private Vector3 referenceDirection;
     private Quaternion lastHandRotation;
+    private UndoRedoManager.ObjectTransformSnapshot transformBefore;
     private bool IsFreeObjectSelection => modelingSettings != null && modelingSettings.CurrentMode == PlacementMode.Free && selectionManager != null && selectionManager.ObjectSelectionCount > 0 && selectionManager.Count == 0;
 
     private void Start()
@@ -69,9 +72,11 @@ public class XRRotateInput : MonoBehaviour
         {
             if (!hand.PinchStarted) return;
 
+            ResetRotation();
             lastHandRotation = rightWrist.rotation;
             isRotating = true;
             freeRotating = true;
+            CaptureHistory();
             return;
         }
 
@@ -106,6 +111,7 @@ public class XRRotateInput : MonoBehaviour
         {
             referenceDirection = direction;
             isRotating = true;
+            CaptureHistory();
             return;
         }
 
@@ -138,7 +144,39 @@ public class XRRotateInput : MonoBehaviour
         }
     }
 
-    private void ResetRotation() { isRotating = false; freeRotating = false; }
+    private void CaptureHistory()
+    {
+        BeginHistoryTransaction();
+        transformBefore = undoRedoManager != null && selectionManager != null && selectionManager.ObjectSelectionCount > 0 && selectionManager.Count == 0 ? undoRedoManager.CaptureObjectTransforms(selectionManager.SelectedObjects) : null;
+    }
+
+    private void BeginHistoryTransaction()
+    {
+        if (undoRedoManager == null || undoRedoManager.IsTransactionActive) return;
+        undoRedoManager.BeginTransaction();
+        ownsTransaction = undoRedoManager.IsTransactionActive;
+    }
+
+    private void FinishHistory()
+    {
+        if (transformBefore != null && undoRedoManager != null) undoRedoManager.RecordObjectTransforms(transformBefore);
+        transformBefore = null;
+        EndHistoryTransaction();
+    }
+
+    private void EndHistoryTransaction()
+    {
+        if (!ownsTransaction) return;
+        ownsTransaction = false;
+        if (undoRedoManager != null) undoRedoManager.EndTransaction();
+    }
+
+    private void ResetRotation()
+    {
+        FinishHistory();
+        isRotating = false;
+        freeRotating = false;
+    }
 
     private bool IsMenuOpen()
     {

@@ -4209,6 +4209,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1278960369}
     m_Modifications:
+    - target: {fileID: 208063836302664999, guid: 3c63c82d67020cb40a7eb95c316fda4e, type: 3}
+      propertyPath: m_Name
+      value: LeftSnapFreeMenuButtonFree
+      objectReference: {fileID: 0}
     - target: {fileID: 314283648419638785, guid: 3c63c82d67020cb40a7eb95c316fda4e, type: 3}
       propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.size
       value: 1
@@ -4305,9 +4309,21 @@ PrefabInstance:
       propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
+    - target: {fileID: 4602863311197689331, guid: 3c63c82d67020cb40a7eb95c316fda4e, type: 3}
+      propertyPath: m_Name
+      value: LeftSnapFreeMenuButtonSnap
+      objectReference: {fileID: 0}
+    - target: {fileID: 6878463156950145097, guid: 3c63c82d67020cb40a7eb95c316fda4e, type: 3}
+      propertyPath: m_Name
+      value: LeftSnapFreeMenuButtonSnapCanvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 8083861802802196941, guid: 3c63c82d67020cb40a7eb95c316fda4e, type: 3}
+      propertyPath: m_Name
+      value: LeftSnapFreeMenuButtonFreeCanvas
+      objectReference: {fileID: 0}
     - target: {fileID: 8917664979043651717, guid: 3c63c82d67020cb40a7eb95c316fda4e, type: 3}
       propertyPath: m_Name
-      value: RightForearmMenuPlacement
+      value: LeftSnapFreeMenuPlacement
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4982,6 +4998,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1722844120195055343, guid: 47b09cac83591f34f852a88760be03e1, type: 3}
   m_PrefabInstance: {fileID: 7533576623650314196}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &1137121020 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5561946791470195964, guid: 566be9a989f600d46916f7c4d129a026, type: 3}
+  m_PrefabInstance: {fileID: 4995200062278717601}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1155272093 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8917664979043651717, guid: f81d631bf6ae2b349914ce8514183cfa, type: 3}
@@ -5271,7 +5292,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1278960369}
   m_Layer: 0
-  m_Name: RightForearmMenu
+  m_Name: LeftSnapFreeMenu
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5285,14 +5306,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1278960368}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.000000029802326, y: -0.118625075, z: 0.000000029802326, w: 0.9929392}
-  m_LocalPosition: {x: 0.013, y: 0.0322, z: -0.0968}
+  m_LocalRotation: {x: 0, y: -0.13917309, z: 0, w: 0.9902681}
+  m_LocalPosition: {x: 0.019, y: 0.069, z: -0.09}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1386204404}
-  m_Father: {fileID: 1348760575}
-  m_LocalEulerAnglesHint: {x: 0, y: -13.626, z: 0}
+  m_Father: {fileID: 1449942206}
+  m_LocalEulerAnglesHint: {x: 0, y: -16, z: 0}
 --- !u!4 &1295639479 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 155494062018084479, guid: f1a8aef6684608241bb032df399c74b0, type: 3}
@@ -10081,6 +10102,71 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1120547869}
   m_SourcePrefab: {fileID: 100100000, guid: ed63e1282ca7ad74cad1815aa57089c1, type: 3}
+--- !u!1001 &4995200062278717601
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1348760575}
+    m_Modifications:
+    - target: {fileID: 1134805051783942180, guid: 566be9a989f600d46916f7c4d129a026, type: 3}
+      propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1698838088}
+    - target: {fileID: 3988281372098698370, guid: 566be9a989f600d46916f7c4d129a026, type: 3}
+      propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1698838088}
+    - target: {fileID: 5349586974735610928, guid: 566be9a989f600d46916f7c4d129a026, type: 3}
+      propertyPath: m_Name
+      value: RightForearmUndoRedoMenu
+      objectReference: {fileID: 0}
+    - target: {fileID: 5561946791470195964, guid: 566be9a989f600d46916f7c4d129a026, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.013
+      objectReference: {fileID: 0}
+    - target: {fileID: 5561946791470195964, guid: 566be9a989f600d46916f7c4d129a026, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.0322
+      objectReference: {fileID: 0}
+    - target: {fileID: 5561946791470195964, guid: 566be9a989f600d46916f7c4d129a026, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.0968
+      objectReference: {fileID: 0}
+    - target: {fileID: 5561946791470195964, guid: 566be9a989f600d46916f7c4d129a026, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.9929392
+      objectReference: {fileID: 0}
+    - target: {fileID: 5561946791470195964, guid: 566be9a989f600d46916f7c4d129a026, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.000000029802326
+      objectReference: {fileID: 0}
+    - target: {fileID: 5561946791470195964, guid: 566be9a989f600d46916f7c4d129a026, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.118625075
+      objectReference: {fileID: 0}
+    - target: {fileID: 5561946791470195964, guid: 566be9a989f600d46916f7c4d129a026, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.000000029802326
+      objectReference: {fileID: 0}
+    - target: {fileID: 5561946791470195964, guid: 566be9a989f600d46916f7c4d129a026, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5561946791470195964, guid: 566be9a989f600d46916f7c4d129a026, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -13.626
+      objectReference: {fileID: 0}
+    - target: {fileID: 5561946791470195964, guid: 566be9a989f600d46916f7c4d129a026, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 566be9a989f600d46916f7c4d129a026, type: 3}
 --- !u!4 &5274897583923469380
 Transform:
   m_ObjectHideFlags: 0
@@ -10326,6 +10412,9 @@ PrefabInstance:
       addedObject: {fileID: 1255820241}
     - targetCorrespondingSourceObject: {fileID: 8834728037239060807, guid: d6878e1999eb4b44a9f5a263af86c185, type: 3}
       insertIndex: -1
+      addedObject: {fileID: 1278960369}
+    - targetCorrespondingSourceObject: {fileID: 8834728037239060807, guid: d6878e1999eb4b44a9f5a263af86c185, type: 3}
+      insertIndex: -1
       addedObject: {fileID: 1527695222}
     - targetCorrespondingSourceObject: {fileID: 1078715569300777278, guid: d6878e1999eb4b44a9f5a263af86c185, type: 3}
       insertIndex: -1
@@ -10347,7 +10436,7 @@ PrefabInstance:
       addedObject: {fileID: 1553167621}
     - targetCorrespondingSourceObject: {fileID: 2339806236364360480, guid: d6878e1999eb4b44a9f5a263af86c185, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1278960369}
+      addedObject: {fileID: 1137121020}
     - targetCorrespondingSourceObject: {fileID: 3430235981092484804, guid: d6878e1999eb4b44a9f5a263af86c185, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1479511702}

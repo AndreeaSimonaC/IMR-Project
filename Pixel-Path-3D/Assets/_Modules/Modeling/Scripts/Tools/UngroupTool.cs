@@ -5,6 +5,7 @@ public class UngroupTool : MonoBehaviour
     [Header("References")]
     [SerializeField] private SelectionManager selectionManager;
     [SerializeField] private VoxelGroupManager groupManager;
+    [SerializeField] private UndoRedoManager undoRedoManager;
 
     public bool UngroupSelected()
     {
@@ -20,6 +21,7 @@ public class UngroupTool : MonoBehaviour
             return false;
         }
 
+        var before = undoRedoManager != null ? groupManager.CaptureState() : null;
         int removedGroups = 0;
 
         foreach (Vector3Int cell in selectionManager.Selected)
@@ -35,7 +37,11 @@ public class UngroupTool : MonoBehaviour
             if (groupManager.UngroupObject(obj)) removedGroups++;
         }
 
-        if (removedGroups > 0) Debug.Log($"[UngroupTool] Removed {removedGroups} group(s).", this);
+        if (removedGroups > 0)
+        {
+            if (before != null) undoRedoManager.RecordGroupChanges(groupManager, before);
+            Debug.Log($"[UngroupTool] Removed {removedGroups} group(s).", this);
+        }
 
         return removedGroups > 0;
     }

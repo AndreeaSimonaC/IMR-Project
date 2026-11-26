@@ -5,7 +5,7 @@ public class RotateTool : MonoBehaviour
     [SerializeField] private ToolManager toolManager;
     [SerializeField] private SelectionManager selectionManager;
     [SerializeField] private VoxelEditOperations editOperations;
-
+    [SerializeField] private UndoRedoManager undoRedoManager;
     private bool CanUseRotate() { return toolManager != null && toolManager.ActiveTool == HandTool.Rotate && selectionManager != null && editOperations != null && selectionManager.HasSelection; }
 
     public bool Rotate90(Vector3Int pivot, int axis, bool clockwise = true)
@@ -37,14 +37,20 @@ public class RotateTool : MonoBehaviour
     public bool RotateY() => RotateAroundSelectionMin(1);
     public bool RotateZ() => RotateAroundSelectionMin(2);
 
-    public bool RotateBy(Vector3 worldAxis, float degrees)
+
+    public bool RotateBy(Vector3 worldAxis, float degrees, bool recordHistory = false)
     {
         if (!CanUseRotate() || selectionManager.ObjectSelectionCount == 0) return false;
+        var before = recordHistory && undoRedoManager != null ? undoRedoManager.CaptureObjectTransforms(selectionManager.SelectedObjects) : null;
         bool rotated = editOperations.RotateSelectedObjects(worldAxis, degrees);
-        if (rotated) { Debug.Log($"[RotateTool] Rotated " + $"{selectionManager.ObjectSelectionCount} object(s).", this); }
+        if (rotated)
+        {
+            if (before != null) undoRedoManager.RecordObjectTransforms(before);
+            Debug.Log($"[RotateTool] Rotated " + $"{selectionManager.ObjectSelectionCount} object(s).", this);
+        }
 
         return rotated;
     }
 
-    private Vector3 GetAxis(int axis) { return axis switch { 0 => Vector3.right, 1 => Vector3.up,  _ => Vector3.forward }; }
+    private Vector3 GetAxis(int axis) { return axis switch { 0 => Vector3.right, 1 => Vector3.up, _ => Vector3.forward }; }
 }

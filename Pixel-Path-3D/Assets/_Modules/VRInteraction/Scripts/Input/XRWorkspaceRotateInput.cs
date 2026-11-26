@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 [DefaultExecutionOrder(-150)]
@@ -10,6 +12,7 @@ public class XRWorkspaceRotateInput : MonoBehaviour
     [SerializeField] private Collider gridFloorCollider;
     [SerializeField] private VoxelObjectManager objectManager;
     [SerializeField] private VoxelModel defaultVoxelModel;
+    [SerializeField] private UndoRedoManager undoRedoManager;
 
     [Header("Left Hand Pointing")]
     [SerializeField] private Transform leftWrist;
@@ -28,6 +31,8 @@ public class XRWorkspaceRotateInput : MonoBehaviour
     private bool rotating;
     private bool interactionBlocked;
     private Vector3 lastHandPosition;
+    private Quaternion pivotRotationBefore;
+    private UndoRedoManager.ObjectTransformSnapshot objectsBefore;
 
     private void Start()
     {
@@ -41,7 +46,6 @@ public class XRWorkspaceRotateInput : MonoBehaviour
         }
 
         if (headCamera == null && Camera.main != null) headCamera = Camera.main.transform;
-
         Debug.Log("[XRWorkspaceRotateInput] Initialized.", this);
     }
 
@@ -60,9 +64,9 @@ public class XRWorkspaceRotateInput : MonoBehaviour
 
             rotating = true;
             lastHandPosition = left.PinchPosition;
+            CaptureHistory();
 
             Debug.Log("[XRWorkspaceRotateInput] Rotation started.", this);
-
             return;
         }
 
@@ -73,7 +77,6 @@ public class XRWorkspaceRotateInput : MonoBehaviour
         cameraRight.Normalize();
 
         Vector3 handDelta = currentHandPosition - lastHandPosition;
-
         float horizontalDelta = Vector3.Dot(handDelta, cameraRight);
         float angle = horizontalDelta * degreesPerMeter;
         if (Mathf.Abs(angle) < 0.01f) return;
@@ -81,6 +84,51 @@ public class XRWorkspaceRotateInput : MonoBehaviour
         RotateWorkspace(angle);
 
         lastHandPosition = currentHandPosition;
+    }
+    private void CaptureHistory()
+    {
+        objectsBefore = null;
+        if (undoRedoManager == null) return;
+        pivotRotationBefore = modelRotationPivot.rotation;
+        var objects = new List<VoxelObject>();
+
+        foreach (VoxelObject obj in objectManager.Objects)
+        {
+            if (obj == null || obj.Model == null || obj.Model == defaultVoxelModel) continue;
+            objects.Add(obj);
+        }
+
+        objectsBefore = undoRedoManager.CaptureObjectTransforms(objects);
+    }
+
+    private void FinishHistory()
+    {
+        if (objectsBefore == null) return;
+        var before = objectsBefore;
+        objectsBefore = null;
+        if (undoRedoManager == null || modelRotationPivot == null) return;
+
+        var after = before.CaptureCurrent();
+        Quaternion startRotation = pivotRotationBefore;
+        Quaternion endRotation = modelRotationPivot.rotation;
+        if (Quaternion.Angle(startRotation, endRotation) < 0.001f && before.SameAs(after)) return;
+
+        Transform pivot = modelRotationPivot;
+
+        undoRedoManager.RecordAction(
+            undo: () =>
+            {
+                if (pivot == null) throw new InvalidOperationException("Workspace pivot is missing.");
+                pivot.rotation = startRotation;
+                before.Apply();
+            },
+            redo: () =>
+            {
+                if (pivot == null) throw new InvalidOperationException("Workspace pivot is missing.");
+                pivot.rotation = endRotation;
+                after.Apply();
+            }
+        );
     }
 
     private bool IsPointingAtGrid()
@@ -101,7 +149,7 @@ public class XRWorkspaceRotateInput : MonoBehaviour
 
         foreach (VoxelObject obj in objectManager.Objects)
         {
-            if (obj == null || obj.Model == null || obj.Model == defaultVoxelModel) { continue; }
+            if (obj == null || obj.Model == null || obj.Model == defaultVoxelModel) continue;
             Vector3 relative = obj.transform.position - pivot;
 
             obj.transform.position = pivot + delta * relative;
@@ -109,13 +157,12 @@ public class XRWorkspaceRotateInput : MonoBehaviour
         }
     }
 
-    private void StopRotation() { rotating = false; }
+    private void StopRotation() { if (rotating) FinishHistory(); rotating = false; }
 
     private bool IsMenuOpen()
     {
         if (expandedMenus == null) return false;
         foreach (GameObject menu in expandedMenus) { if (menu != null && menu.activeInHierarchy) return true; }
-
         return false;
     }
 

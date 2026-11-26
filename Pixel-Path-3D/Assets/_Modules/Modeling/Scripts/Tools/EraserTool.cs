@@ -18,7 +18,7 @@ public class EraserTool : MonoBehaviour
     public bool HasTarget => hasTarget || targetObject != null;
     public Vector3Int TargetCell => targetCell;
     public VoxelObject TargetObject => targetObject;
-
+    [SerializeField] private UndoRedoManager undoRedoManager;
     private bool CanUseEraser()
     {
         return toolManager != null && toolManager.ActiveTool == HandTool.Eraser && voxelGrid != null && voxelModel != null && editOperations != null;
@@ -81,9 +81,15 @@ public class EraserTool : MonoBehaviour
     {
         if (!CanUseEraser() || selectionManager == null) return false;
         bool erased = false;
-        var selectedObjects = new List<VoxelObject>(selectionManager.SelectedObjects);
-        foreach (VoxelObject obj in selectedObjects) erased |= EraseObject(obj);
-        if (selectionManager.Selected.Count > 0) erased |= editOperations.EraseSelected();
+        bool ownTransaction = undoRedoManager != null && !undoRedoManager.IsTransactionActive;
+        if (ownTransaction) undoRedoManager.BeginTransaction();
+        try
+        {
+            var selectedObjects = new List<VoxelObject>(selectionManager.SelectedObjects);
+            foreach (VoxelObject obj in selectedObjects) erased |= EraseObject(obj);
+            if (selectionManager.Selected.Count > 0) erased |= editOperations.EraseSelected();
+        }
+        finally { if (ownTransaction) undoRedoManager.EndTransaction(); }
 
         return erased;
     }
@@ -101,12 +107,11 @@ public class EraserTool : MonoBehaviour
     private bool EraseObject(VoxelObject obj)
     {
         if (obj == null || objectManager == null) return false;
-        bool removed = objectManager.UnregisterObject(obj);
-        if (!removed) return false;
-        if (groupManager != null) groupManager.RemoveObjectFromGroup(obj);
-        if (selectionManager != null) selectionManager.RemoveFromSelection(obj);
-        Debug.Log($"[EraserTool] Removed object {obj.name}.", this);
-        Destroy(obj.gameObject);
-        return true;
+        if (undoRedoManager == null) { Debug.LogWarning("[EraserTool] UndoRedoManager missing.", this); return false; }
+
+        bool removed = undoRedoManager.DeleteFreeObject(objectManager, obj, groupManager, selectionManager);
+        if (removed) Debug.Log($"[EraserTool] Removed object {obj.name}.", this);
+
+        return removed;
     }
 }

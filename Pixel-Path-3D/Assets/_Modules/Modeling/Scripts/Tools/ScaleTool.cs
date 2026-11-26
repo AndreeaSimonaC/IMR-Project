@@ -5,7 +5,7 @@ public class ScaleTool : MonoBehaviour
     [SerializeField] private ToolManager toolManager;
     [SerializeField] private SelectionManager selectionManager;
     [SerializeField] private VoxelEditOperations editOperations;
-
+    [SerializeField] private UndoRedoManager undoRedoManager;
     public bool HasSelection => selectionManager != null && selectionManager.HasSelection;
 
     private bool CanUseScale()
@@ -34,11 +34,17 @@ public class ScaleTool : MonoBehaviour
     public bool ScaleY2() => ScaleBy(new Vector3Int(1, 2, 1));
     public bool ScaleZ2() => ScaleBy(new Vector3Int(1, 1, 2));
     public bool ScaleUniform2() => ScaleBy(new Vector3Int(2, 2, 2));
-    public bool ScaleObjectsBy(Vector3 factors)
+
+    public bool ScaleObjectsBy(Vector3 factors, bool recordHistory = false)
     {
         if (!CanUseScale() || selectionManager.ObjectSelectionCount == 0) return false;
+        var before = recordHistory && undoRedoManager != null ? undoRedoManager.CaptureObjectTransforms(selectionManager.SelectedObjects) : null;
         bool scaled = editOperations.ScaleSelectedObjects(factors);
-        if (scaled) { Debug.Log($"[ScaleTool] Scaled " + $"{selectionManager.ObjectSelectionCount} object(s).", this); }
+        if (scaled)
+        {
+            if (before != null) undoRedoManager.RecordObjectTransforms(before);
+            Debug.Log($"[ScaleTool] Scaled " + $"{selectionManager.ObjectSelectionCount} object(s).", this);
+        }
 
         return scaled;
     }

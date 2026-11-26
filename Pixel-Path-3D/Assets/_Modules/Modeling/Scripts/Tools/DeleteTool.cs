@@ -8,7 +8,7 @@ public class DeleteTool : MonoBehaviour
     [SerializeField] private VoxelEditOperations editOperations;
     [SerializeField] private VoxelObjectManager objectManager;
     [SerializeField] private VoxelGroupManager groupManager;
-
+    [SerializeField] private UndoRedoManager undoRedoManager;
     public bool HasSelection => selectionManager != null && selectionManager.HasSelection;
 
     public bool DeleteSelected()
@@ -21,24 +21,31 @@ public class DeleteTool : MonoBehaviour
 
         var objects = new List<VoxelObject>(selectionManager.SelectedObjects);
 
-        if (objects.Count > 0 && objectManager == null) { Debug.LogWarning("[DeleteTool] VoxelObjectManager is not assigned.", this); return false; }
-
-        foreach (VoxelObject obj in objects)
+        if (objects.Count > 0 && (objectManager == null || undoRedoManager == null))
         {
-            if (obj == null) continue;
-            if (!objectManager.UnregisterObject(obj)) continue;
-            if (groupManager != null) groupManager.RemoveObjectFromGroup(obj);
-
-            selectionManager.RemoveFromSelection(obj);
-            Destroy(obj.gameObject);
-
-            deletedObjects++;
-            deleted = true;
+            Debug.LogWarning("[DeleteTool] Object or history manager is not assigned.", this);
+            return false;
         }
 
-        if (count > 0) deleted |= editOperations.EraseSelected();
-        else selectionManager.ClearSelection();
-        if (deleted) { Debug.Log($"[DeleteTool] Deleted {count} selected voxels " + $"and {deletedObjects} object(s).", this); }
+        bool ownTransaction = undoRedoManager != null && !undoRedoManager.IsTransactionActive;
+        if (ownTransaction) undoRedoManager.BeginTransaction();
+
+        try
+        {
+            foreach (VoxelObject obj in objects)
+            {
+                if (obj == null) continue;
+                if (!undoRedoManager.DeleteFreeObject(objectManager, obj, groupManager, selectionManager)) continue;
+
+                deletedObjects++;
+                deleted = true;
+            }
+
+            if (count > 0) deleted |= editOperations.EraseSelected();
+            else if (deleted) selectionManager.ClearSelection();
+        }
+        finally { if (ownTransaction) undoRedoManager.EndTransaction(); }
+        if (deleted) Debug.Log($"[DeleteTool] Deleted {count} selected voxels " + $"and {deletedObjects} object(s).", this);
 
         return deleted;
     }

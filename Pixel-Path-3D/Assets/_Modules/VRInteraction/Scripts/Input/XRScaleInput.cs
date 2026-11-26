@@ -10,6 +10,7 @@ public class XRScaleInput : MonoBehaviour
     [SerializeField] private ScaleTool scaleTool;
     [SerializeField] private SelectionManager selectionManager;
     [SerializeField] private ModelingSettings modelingSettings;
+    [SerializeField] private UndoRedoManager undoRedoManager;
 
     [Header("Scaling")]
     [SerializeField, Min(1.01f)] private float scaleThreshold = 1.5f;
@@ -21,7 +22,9 @@ public class XRScaleInput : MonoBehaviour
     private bool wasAvailable;
     private bool scaledThisGesture;
     private bool freeScaling;
+    private bool ownsTransaction;
     private float appliedScaleFactor = 1f;
+    private UndoRedoManager.ObjectTransformSnapshot transformBefore;
 
     private void Start()
     {
@@ -61,6 +64,7 @@ public class XRScaleInput : MonoBehaviour
         {
             ResetScaling();
             freeScaling = modelingSettings != null && modelingSettings.CurrentMode == PlacementMode.Free && selectionManager != null && selectionManager.ObjectSelectionCount > 0 && selectionManager.Count == 0;
+            CaptureHistory();
         }
 
         if (freeScaling)
@@ -76,6 +80,32 @@ public class XRScaleInput : MonoBehaviour
             scaledThisGesture = true;
             Debug.Log("[XRScaleInput] Selection scaled 2x.", this);
         }
+    }
+    private void CaptureHistory()
+    {
+        BeginHistoryTransaction();
+        transformBefore = undoRedoManager != null && selectionManager != null && selectionManager.ObjectSelectionCount > 0 && selectionManager.Count == 0 ? undoRedoManager.CaptureObjectTransforms(selectionManager.SelectedObjects) : null;
+    }
+    private void BeginHistoryTransaction()
+    {
+        if (undoRedoManager == null || undoRedoManager.IsTransactionActive) return;
+
+        undoRedoManager.BeginTransaction();
+        ownsTransaction = undoRedoManager.IsTransactionActive;
+    }
+    private void FinishHistory()
+    {
+        if (transformBefore != null && undoRedoManager != null) undoRedoManager.RecordObjectTransforms(transformBefore);
+
+        transformBefore = null;
+        EndHistoryTransaction();
+    }
+
+    private void EndHistoryTransaction()
+    {
+        if (!ownsTransaction) return;
+        ownsTransaction = false;
+        if (undoRedoManager != null) undoRedoManager.EndTransaction();
     }
 
     private bool IsMenuOpen()
@@ -105,7 +135,7 @@ public class XRScaleInput : MonoBehaviour
     {
         float currentFactor = manipulation.ScaleFactor;
 
-        if (currentFactor <= 0f || appliedScaleFactor <= 0f) { return; }
+        if (currentFactor <= 0f || appliedScaleFactor <= 0f) return;
         float incrementalFactor = currentFactor / appliedScaleFactor;
         if (Mathf.Abs(incrementalFactor - 1f) < 0.0001f) return;
         Vector3 factors = Vector3.one * incrementalFactor;
@@ -114,6 +144,7 @@ public class XRScaleInput : MonoBehaviour
 
     private void ResetScaling()
     {
+        FinishHistory();
         scaledThisGesture = false;
         freeScaling = false;
         appliedScaleFactor = 1f;
