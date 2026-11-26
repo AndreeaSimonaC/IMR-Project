@@ -235,6 +235,7 @@ MonoBehaviour:
   gridFloorCollider: {fileID: 2110906976}
   objectManager: {fileID: 308496275}
   defaultVoxelModel: {fileID: 962505121}
+  undoRedoManager: {fileID: 783386746}
   leftWrist: {fileID: 1449942206}
   leftIndexTip: {fileID: 1468541027}
   headCamera: {fileID: 1948693204}
@@ -360,6 +361,7 @@ Transform:
   - {fileID: 962505120}
   - {fileID: 1297761909}
   - {fileID: 308496276}
+  - {fileID: 783386747}
   m_Father: {fileID: 1698838087}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &93334935 stripped
@@ -578,6 +580,7 @@ MonoBehaviour:
   voxelRenderer: {fileID: 1297761910}
   objectManager: {fileID: 308496275}
   groupManager: {fileID: 545909711}
+  undoRedoManager: {fileID: 783386746}
 --- !u!1 &172529699 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8917664979043651717, guid: eb164a8f110003e48bd92f760ea48c98, type: 3}
@@ -710,6 +713,7 @@ MonoBehaviour:
   voxelModel: {fileID: 962505121}
   selectionManager: {fileID: 545909709}
   colorManager: {fileID: 374909674}
+  undoRedoManager: {fileID: 0}
 --- !u!4 &246207277 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2216075854267481603, guid: d6878e1999eb4b44a9f5a263af86c185, type: 3}
@@ -815,6 +819,7 @@ MonoBehaviour:
   selectionManager: {fileID: 545909709}
   groupManager: {fileID: 545909711}
   modelingSettings: {fileID: 1698838088}
+  undoRedoManager: {fileID: 783386746}
 --- !u!114 &255035297 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 997035080128087747, guid: c9aa994b6672750469f15472eb7ca2e4, type: 3}
@@ -1662,6 +1667,7 @@ MonoBehaviour:
   - {fileID: 1155272093}
   - {fileID: 1828059409}
   defaultVoxelModel: {fileID: 962505121}
+  undoRedoManager: {fileID: 783386746}
 --- !u!1 &463091320 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4602863311197689331, guid: 7c4d89d11bdb50b4dbd6f2126a3cc297, type: 3}
@@ -2110,6 +2116,7 @@ MonoBehaviour:
   toolManager: {fileID: 1928403242}
   selectionManager: {fileID: 545909709}
   editOperations: {fileID: 254324063}
+  undoRedoManager: {fileID: 783386746}
 --- !u!1 &558337920 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3384859709117616850, guid: 7c4d89d11bdb50b4dbd6f2126a3cc297, type: 3}
@@ -3269,6 +3276,50 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3216907cfa47ce741b62ea46e0546c7b, type: 3}
+--- !u!1 &783386745
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 783386747}
+  - component: {fileID: 783386746}
+  m_Layer: 0
+  m_Name: UndoRedoManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &783386746
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 783386745}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 338b0a8367ff8dd4f95c51c737ae5002, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UndoRedoManager
+--- !u!4 &783386747
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 783386745}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 88686459}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &787272619 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7567148663521636403, guid: d6878e1999eb4b44a9f5a263af86c185, type: 3}
@@ -3434,6 +3485,7 @@ MonoBehaviour:
   selectionManager: {fileID: 545909709}
   voxelGrid: {fileID: 972695842}
   modelingSettings: {fileID: 1698838088}
+  undoRedoManager: {fileID: 783386746}
   rightWrist: {fileID: 1348760575}
   rotationThreshold: 60
   expandedMenus:
@@ -5104,6 +5156,7 @@ MonoBehaviour:
   objectManager: {fileID: 308496275}
   voxelGrid: {fileID: 972695842}
   modelingSettings: {fileID: 1698838088}
+  undoRedoManager: {fileID: 783386746}
 --- !u!114 &1189714298
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5120,6 +5173,7 @@ MonoBehaviour:
   editOperations: {fileID: 254324063}
   objectManager: {fileID: 308496275}
   groupManager: {fileID: 545909711}
+  undoRedoManager: {fileID: 783386746}
 --- !u!114 &1189714299
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5134,6 +5188,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GroupTool
   selectionManager: {fileID: 545909709}
   groupManager: {fileID: 545909711}
+  undoRedoManager: {fileID: 783386746}
 --- !u!114 &1189714300
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5148,6 +5203,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UngroupTool
   selectionManager: {fileID: 545909709}
   groupManager: {fileID: 545909711}
+  undoRedoManager: {fileID: 783386746}
 --- !u!1 &1240689852
 GameObject:
   m_ObjectHideFlags: 0
@@ -5754,6 +5810,7 @@ MonoBehaviour:
   scaleTool: {fileID: 553409159}
   selectionManager: {fileID: 545909709}
   modelingSettings: {fileID: 1698838088}
+  undoRedoManager: {fileID: 783386746}
   scaleThreshold: 1.5
   expandedMenus:
   - {fileID: 0}
@@ -6034,6 +6091,7 @@ MonoBehaviour:
   brushTool: {fileID: 2029536936}
   voxelGrid: {fileID: 972695842}
   modelingSettings: {fileID: 1698838088}
+  undoRedoManager: {fileID: 783386746}
   rayOrigin: {fileID: 583695300}
   indexTip: {fileID: 440804851}
   thumbTip: {fileID: 1535857912}
@@ -6149,6 +6207,7 @@ MonoBehaviour:
   hsvAddToPalette: {fileID: 1479511704}
   customPagination: {fileID: 1568924094}
   modelingSettings: {fileID: 1698838088}
+  undoRedoManager: {fileID: 783386746}
   logActions: 1
 --- !u!1 &1448595280
 GameObject:
@@ -6197,6 +6256,7 @@ MonoBehaviour:
   toolManager: {fileID: 1928403242}
   selectionManager: {fileID: 545909709}
   editOperations: {fileID: 254324063}
+  undoRedoManager: {fileID: 783386746}
 --- !u!4 &1449942206 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8834728037239060807, guid: d6878e1999eb4b44a9f5a263af86c185, type: 3}
@@ -6337,6 +6397,7 @@ MonoBehaviour:
   selectionManager: {fileID: 545909709}
   editOperations: {fileID: 254324063}
   voxelGrid: {fileID: 972695842}
+  undoRedoManager: {fileID: 783386746}
 --- !u!1 &1467872320
 GameObject:
   m_ObjectHideFlags: 0
@@ -8130,6 +8191,7 @@ MonoBehaviour:
   voxelGrid: {fileID: 972695842}
   selectionManager: {fileID: 545909709}
   modelingSettings: {fileID: 1698838088}
+  undoRedoManager: {fileID: 783386746}
   expandedMenus:
   - {fileID: 0}
   - {fileID: 1155272093}
@@ -8907,6 +8969,7 @@ MonoBehaviour:
   colorManager: {fileID: 374909674}
   modelingSettings: {fileID: 1698838088}
   objectManager: {fileID: 308496275}
+  undoRedoManager: {fileID: 783386746}
   brushColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!4 &2030225654 stripped
 Transform:
@@ -10113,11 +10176,27 @@ PrefabInstance:
     - target: {fileID: 1134805051783942180, guid: 566be9a989f600d46916f7c4d129a026, type: 3}
       propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 1698838088}
+      objectReference: {fileID: 783386746}
+    - target: {fileID: 1134805051783942180, guid: 566be9a989f600d46916f7c4d129a026, type: 3}
+      propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: Redo
+      objectReference: {fileID: 0}
+    - target: {fileID: 1134805051783942180, guid: 566be9a989f600d46916f7c4d129a026, type: 3}
+      propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: UndoRedoManager, Assembly-CSharp
+      objectReference: {fileID: 0}
     - target: {fileID: 3988281372098698370, guid: 566be9a989f600d46916f7c4d129a026, type: 3}
       propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 1698838088}
+      objectReference: {fileID: 783386746}
+    - target: {fileID: 3988281372098698370, guid: 566be9a989f600d46916f7c4d129a026, type: 3}
+      propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: Undo
+      objectReference: {fileID: 0}
+    - target: {fileID: 3988281372098698370, guid: 566be9a989f600d46916f7c4d129a026, type: 3}
+      propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: UndoRedoManager, Assembly-CSharp
+      objectReference: {fileID: 0}
     - target: {fileID: 5349586974735610928, guid: 566be9a989f600d46916f7c4d129a026, type: 3}
       propertyPath: m_Name
       value: RightForearmUndoRedoMenu
